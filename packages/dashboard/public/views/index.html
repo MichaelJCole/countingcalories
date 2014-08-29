@@ -1,0 +1,198 @@
+<div class="" data-ng-controller="DashboardController">
+
+  <!-- Calorie Goal -->
+
+  <div class="dashboard-section">
+    <form class="form-inline" role="form">
+      <div class="form-group">
+
+        <h2>
+            <label for="calorieGoal">Goal: </label>
+            <input style="width: 140px;" type="text" class="form-control input-lg" id="calorieGoal" placeholder="How many?">
+            <label for="calorieGoal"> calories per day.</label>
+
+            <span class="label label-success">Yes!</span>
+        </h2>
+      
+      </div>
+    </form>
+  </div>
+
+
+  <!-- Add Journal Entry -->
+
+  <div class="dashboard-section">
+    <form class="form-inline" role="form">
+      <div class="form-group">
+
+        <h2 style="font-weight:bold;">Add Journal Entry: <span class="label label-success">Added!</span></h2>
+        
+        <label class="sr-only" for="addDate">Date</label>
+        <input style="width: 140px;" type="text" class="form-control input-lg" id="addDate" placeholder="Date?">
+
+        <label class="sr-only" for="addTime">Time</label>
+        <input style="width: 140px;" type="text" class="form-control input-lg" id="addTime" placeholder="Time?">
+
+        <label class="sr-only" for="addDate">Description</label>
+        <input style="width: 580px;;" type="text" class="form-control input-lg" id="addDescription" placeholder="Description?">
+
+        <label class="sr-only" for="addDate">Calories</label>
+        <input style="width: 140px;" type="text" class="form-control input-lg" id="addCalories" placeholder="Calories?">
+
+        <button type="submit" class="btn btn-lg btn-primary">
+          <i class="glyphicon glyphicon-plus"></i> 
+          <b>Add</b>
+        </button>
+      </div>
+
+    </form>
+  </div>
+
+
+  <!-- Table of Journal Entries -->
+
+  <div class="dashboard-section">
+    <h2 style="font-weight:bold;">Calorie Journal:
+      <span class="tag label label-info" ng-show="filter.dates.active">
+        <span>Dates: {{filter.dates.from}} -> {{filter.dates.to}}</span>
+        <a><i class="remove glyphicon glyphicon-remove glyphicon-white"></i></a> 
+      </span>
+
+      <span class="tag label label-info" ng-show="filter.times.active">
+        <span>Times: {{filter.times.from}} -> {{filter.times.to}}</span>
+        <a><i class="remove glyphicon glyphicon-remove glyphicon-white"></i></a> 
+      </span>
+    </h2> <!-- title and filter tags -->
+
+
+    <!-- Filter forms -->
+
+    <!-- Time filter form -->
+    <form ng-show="showDateFilter" id="dateFilter" class="form-inline indent" role="form">
+      <h3>Date Filter</h3>
+      <p>Show me only the entries between these two dates.</p>
+      <div class="form-group">
+        <!-- Starting and ending date controls -->
+        <label class="sr-only" for="startDate">Start Date</label>
+        <input style="width: 140px;" type="text" class="form-control input-lg" id="startDate" placeholder="Starting?">
+        -
+        <label class="sr-only" for="endDate">End Date</label>
+        <input style="width: 140px;" type="text" class="form-control input-lg" id="endDate" placeholder="Ending?">
+        <!-- Filter button -->
+        <button type="submit" class="btn btn-primary">
+          <i class="glyphicon glyphicon-filter"></i> 
+          <b>Filter</b>
+        </button>
+        <!-- Cancel button -->
+        <button ng-click="showDateFilter=false" type="submit" class="btn btn-default">
+          Cancel
+        </button>
+      </div>
+    </form>
+
+    <!-- Time filter form -->
+    <form ng-show="showTimeFilter" id="timeFilter" class="form-inline indent" role="form">
+      <h3>Time Filter</h3>
+      <p>Show me only the entries, on all days, between these two times.</p>
+      <div class="form-group">
+        <!-- Starting and ending time controls -->
+        <label class="sr-only" for="startDate">Start Time</label>
+        <input style="width: 140px;" type="text" class="form-control input-lg" id="startTime" placeholder="Starting?">
+        -
+        <label class="sr-only" for="endDate">End Time</label>
+        <input style="width: 140px;" type="text" class="form-control input-lg" id="endTime" placeholder="Ending?">
+        <!-- Filter button -->
+        <button type="submit" class="btn btn-primary">
+          <i class="glyphicon glyphicon-filter"></i> 
+          <b>Filter</b>
+        </button>
+        <!-- Cancel button -->
+        <button ng-click="showTimeFilter=false" type="submit" class="btn btn-default">
+          Cancel
+        </button>
+      </div>
+    </form>
+
+
+    <!-- Journal Table -->
+
+    <div class="journalEntries">
+      <div class="journalRow journalHeader">
+
+        <span class="journalCell journalDate">
+          Date
+            <button ng-model="showDateFilter" btn-checkbox type="button" class="btn btn-sm btn-default">
+              <i class="glyphicon glyphicon-filter"></i>
+            </button>
+        </span>
+
+
+        <span class="journalCell journalTime">
+          Time 
+            <button ng-model="showTimeFilter" btn-checkbox type="button" class="btn btn-sm btn-default">
+              <i class="glyphicon glyphicon-filter"></i>
+            </button>
+        </span>
+
+        <span class="journalCell journalDescription">
+          Description
+        </span>
+
+        <span class="journalCell journalCalories">
+          Calories
+        </span>
+
+        <span class="journalCell journalTools">
+          &nbsp;
+        </span>
+
+      </div> <!-- journalHeader -->
+
+      <div class="journalDateRow" ng-class="date.display" ng-repeat="date in journalEntries" 
+           style="position: relative;">
+        <!-- Make the Date and Calories badge -->
+        <span class="journalDateSprite"  ng-class="date.display"
+              style="position: absolute; top: 10px; left: 10px;">
+          <div class="spriteDate">{{date.date}}</div>
+          <div class="spriteCount">{{date.calories}}</div>
+          <div class="spriteLabel">calories</div>
+        </span>
+
+        <span class="journalItems">
+          <div class="journalItem" ng-repeat="item in date.entries">
+
+            <!-- Maket the item cells-->
+            <span class="journalCell journalDate" style="visibility: hidden;">
+              {{ item.date }}
+            </span>
+
+            <span class="journalCell journalTime">
+              {{ item.time }}
+            </span>
+
+            <span class="journalCell journalDescription">
+              {{ item.description }}
+            </span>
+
+            <span class="journalCell journalCalories">
+              {{ item.calories }}
+            </span>
+
+            <span class="journalCell journalTools">
+              <a>
+                <i class="glyphicon glyphicon-edit"></i> 
+              </a>
+              <a>
+                <i class="glyphicon glyphicon-remove"></i> 
+              </a>
+            </span>
+          </div> <!-- item -->
+
+        </span> <!-- items -->
+      </div> <!-- date row -->
+
+    </div> <!-- table -->
+
+  </div> <!-- Section -->
+
+</div>

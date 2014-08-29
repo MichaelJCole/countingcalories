@@ -1,0 +1,71 @@
+/* http://angular-ui.github.io/bootstrap/ */
+.nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
+
+
+/* Filter forms */
+.indent {
+  padding-left: 100px;
+}
+
+/* Calorie Journal table */
+.journalCell {
+  font-size: 14pt;
+  border: none;
+  display: table-cell;
+  width: 143px;
+  padding: 5px;
+  margin: 0px;
+}
+
+.journalHeader .journalCell {
+  font-size: 20pt;
+}
+
+.journalTime {
+  text-align: right;
+  padding-right: 30px;
+}
+.journalDescription {
+  width: 580px;
+}
+.journalCalories {
+  text-align: right;
+}
+.journalTools {
+  text-align: right;
+  width: 92px;
+}
+
+.journalDateRow {
+  border-bottom: 4px solid white;
+  background-color: #CBE8BA;
+}
+
+.journalDateRow.red {
+  background-color: #FFB4B0;
+}
+
+.journalDateSprite {
+  border-radius: .25em;
+  padding: 10px;
+  color: white;
+  background-color: #5cb85c;
+}
+.journalDateSprite.red {
+  background-color: #d9534f;
+}
+.spriteDate, .spriteLabel {
+  font-size: 14pt;
+}
+.spriteCount {
+  font-size: 20pt;
+}
+
+.journalTools a {
+  color: #888;
+  cursor: pointer;
+}
+.journalTools a:hover {
+  color: #555;
+}
+

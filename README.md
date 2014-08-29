@@ -1,3 +1,14 @@
+# This project is based on the MEAN.io stack.
+
+For more information on MEAN.io see below.
+
+A 'staging' version is hosted at http://countingcalories.herokuapp.com/
+
+Requirements:  https://www.pivotaltracker.com/n/projects/1153574
+Mockups:  https://moqups.com/michaelcole/x8SQIVp8/p:a558ee8a0
+
+---
+
 # [![MEAN Logo](http://www.mean.io/img/logos/meanlogo.png)](http://mean.io/) MEAN Stack
 
 [![Build Status](https://travis-ci.org/linnovate/mean.png?branch=master)](https://travis-ci.org/linnovate/mean)
