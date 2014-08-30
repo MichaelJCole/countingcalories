@@ -2,12 +2,23 @@
 .nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
 
 
+/* destination animations */
+.my-special-animation.ng-enter.ng-enter-active {
+  background:blue;
+}
+
+
 /* Filter forms */
 .indent {
   padding-left: 100px;
 }
 
+
 /* Calorie Journal table */
+
+.journalEntries tbody {
+}
+
 .journalCell {
   font-size: 14pt;
   border: none;

@@ -3,6 +3,7 @@
   <!-- Calorie Goal -->
 
   <div class="dashboard-section">
+
     <form class="form-inline" role="form">
       <div class="form-group">
 
@@ -11,7 +12,10 @@
             <input style="width: 140px;" type="text" class="form-control input-lg" id="calorieGoal" placeholder="How many?">
             <label for="calorieGoal"> calories per day.</label>
 
-            <span class="label label-success">Yes!</span>
+            <span class="label label-success"
+              ng-show="">
+              Yes!
+            </span>
         </h2>
       
       </div>
@@ -162,7 +166,8 @@
         ng-repeat="date in journalEntries">
 
         <tr class="journalItem" 
-          ng-repeat="item in date.entries">
+          ng-repeat="item in date.entries"
+          ng-show="item.filterDate && item.filterTime"
 
           <!-- Make the Date and Calories badge -->
           <td class="journalCell journalDate" style="position: relative;"
