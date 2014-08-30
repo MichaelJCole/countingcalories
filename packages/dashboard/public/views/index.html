@@ -68,7 +68,9 @@
     <!-- Filter forms -->
 
     <!-- Time filter form -->
-    <form ng-show="showDateFilter" id="dateFilter" class="form-inline indent" role="form">
+    <form id="dateFilter" class="form-inline indent" 
+      ng-show="showDateFilter" role="form">
+
       <h3>Date Filter</h3>
       <p>Show me only the entries between these two dates.</p>
       <div class="form-group">
@@ -84,14 +86,17 @@
           <b>Filter</b>
         </button>
         <!-- Cancel button -->
-        <button ng-click="showDateFilter=false" type="submit" class="btn btn-default">
+        <button type="submit" class="btn btn-default"
+          ng-click="showDateFilter=false">
           Cancel
         </button>
       </div>
     </form>
 
     <!-- Time filter form -->
-    <form ng-show="showTimeFilter" id="timeFilter" class="form-inline indent" role="form">
+    <form id="timeFilter" class="form-inline indent" 
+      ng-show="showTimeFilter" role="form">
+
       <h3>Time Filter</h3>
       <p>Show me only the entries, on all days, between these two times.</p>
       <div class="form-group">
@@ -107,7 +112,8 @@
           <b>Filter</b>
         </button>
         <!-- Cancel button -->
-        <button ng-click="showTimeFilter=false" type="submit" class="btn btn-default">
+        <button  class="btn btn-default"
+          ng-click="showTimeFilter=false" type="submit">
           Cancel
         </button>
       </div>
@@ -116,82 +122,137 @@
 
     <!-- Journal Table -->
 
-    <div class="journalEntries">
-      <div class="journalRow journalHeader">
+    <table class="journalEntries">
+      <thead>
+        <tr class="journalRow journalHeader">
 
-        <span class="journalCell journalDate">
-          Date
-            <button ng-model="showDateFilter" btn-checkbox type="button" class="btn btn-sm btn-default">
+          <th class="journalCell journalDate">
+            Date
+            <button class="btn btn-sm btn-default" type="button"
+              ng-model="showDateFilter" btn-checkbox>
               <i class="glyphicon glyphicon-filter"></i>
             </button>
-        </span>
+          </th>
 
 
-        <span class="journalCell journalTime">
-          Time 
-            <button ng-model="showTimeFilter" btn-checkbox type="button" class="btn btn-sm btn-default">
+          <th class="journalCell journalTime">
+            Time 
+            <button class="btn btn-sm btn-default" type="button"
+              ng-model="showTimeFilter" btn-checkbox>
               <i class="glyphicon glyphicon-filter"></i>
             </button>
-        </span>
+          </th>
 
-        <span class="journalCell journalDescription">
-          Description
-        </span>
+          <th class="journalCell journalDescription">
+            Description
+          </th>
 
-        <span class="journalCell journalCalories">
-          Calories
-        </span>
+          <th class="journalCell journalCalories">
+            Calories
+          </th>
 
-        <span class="journalCell journalTools">
-          &nbsp;
-        </span>
+          <th class="journalCell journalTools">
+            &nbsp;
+          </th>
+        </tr>
 
-      </div> <!-- journalHeader -->
+      </thead> <!-- journalHeader -->
 
-      <div class="journalDateRow" ng-class="date.display" ng-repeat="date in journalEntries" 
-           style="position: relative;">
-        <!-- Make the Date and Calories badge -->
-        <span class="journalDateSprite"  ng-class="date.display"
-              style="position: absolute; top: 10px; left: 10px;">
-          <div class="spriteDate">{{date.date}}</div>
-          <div class="spriteCount">{{date.calories}}</div>
-          <div class="spriteLabel">calories</div>
-        </span>
+      <tbody class="journalDateRow" ng-class="date.display" 
+        ng-repeat="date in journalEntries">
 
-        <span class="journalItems">
-          <div class="journalItem" ng-repeat="item in date.entries">
+        <tr class="journalItem" 
+          ng-repeat="item in date.entries">
 
-            <!-- Maket the item cells-->
-            <span class="journalCell journalDate" style="visibility: hidden;">
-              {{ item.date }}
+          <!-- Make the Date and Calories badge -->
+          <td class="journalCell journalDate" style="position: relative;"
+            ng-show="date.showDateSprite">
+
+            <span class="journalDateSprite" ng-class="date.display" style="position: absolute; top: 10px; left: 10px;"
+            ng-if="$first">
+              <div class="spriteDate">{{date.date}}</div>
+              <div class="spriteCount">{{date.calories}}</div>
+              <div class="spriteLabel">calories</div>
             </span>
+          </td>
 
-            <span class="journalCell journalTime">
-              {{ item.time }}
+          <!-- Maket the item cells-->
+          <td
+            ng-hide="date.showDateSprite">
+
+            <span class="journalCell journalDate" 
+              editable-text="item.date"
+              e-name="date" 
+              e-form="rowform">
+                {{ item.date }}
             </span>
+          </td>
 
-            <span class="journalCell journalDescription">
-              {{ item.description }}
+          <td>
+            <span class="journalCell journalTime" 
+              editable-text="item.time"
+              e-name="date" 
+              e-form="rowform">
+                {{ item.time }}
             </span>
+          </td>
 
-            <span class="journalCell journalCalories">
-              {{ item.calories }}
+          <td>
+            <span class="journalCell journalDescription"
+              editable-text="item.description"
+              e-name="description" 
+              e-form="rowform">
+                {{ item.description }}
             </span>
+          </td>
 
-            <span class="journalCell journalTools">
-              <a>
-                <i class="glyphicon glyphicon-edit"></i> 
-              </a>
-              <a>
+          <td>
+            <span class="journalCell journalCalories"
+              editable-text="item.calories"
+              e-name="calories" 
+              e-form="rowform">
+                {{ item.calories }}
+            </span>
+          </td>
+
+          <td class="journalCell journalTools">
+
+            <!-- Row edit form -->
+            <form class="form-buttons form-inline" 
+              editable-form 
+              name="rowform" 
+              XXonbeforesave="saveUser($data, user.id)" 
+              ng-show="rowform.$visible" 
+              shown="inserted == item">
+  
+              <button class="btn btn-primary" type="submit"
+                ng-disabled="rowform.$waiting">
+                <i class="glyphicon glyphicon-ok"></i> 
+              </button>
+              <button class="btn btn-default" type="button" 
+                ng-disabled="rowform.$waiting" 
+                ng-click="rowform.$cancel()">
                 <i class="glyphicon glyphicon-remove"></i> 
-              </a>
-            </span>
-          </div> <!-- item -->
+              </button>
+            </form>
 
-        </span> <!-- items -->
-      </div> <!-- date row -->
+            <!-- Row view controls -->
+            <div class="buttons" ng-show="!rowform.$visible">
+              <button class="btn btn-primary" 
+                ng-click="rowform.$show()">
+                <i class="glyphicon glyphicon-edit"></i> 
+              </button>
+              <button class="btn btn-danger" 
+                ng-click="removeUser($index)">
+                  <i class="glyphicon glyphicon-trash"></i> 
+              </button>
+            </div>
+          </td>
 
-    </div> <!-- table -->
+        </tr>
+      </tbody>
+
+    </table>
 
   </div> <!-- Section -->
 

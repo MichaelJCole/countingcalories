@@ -1,6 +1,8 @@
 'use strict';
 
-angular.module('mean.dashboard', ['ui.bootstrap']).controller('DashboardController', ['$scope', 'Global', 'Dashboard',
+var app = angular.module('mean.dashboard', ['ui.bootstrap']);
+
+app.controller('DashboardController', ['$scope', 'Global', 'Dashboard',
   function($scope, Global, Dashboard) {
     $scope.global = Global;
     $scope.package = {
@@ -14,6 +16,7 @@ angular.module('mean.dashboard', ['ui.bootstrap']).controller('DashboardControll
       { date: 'Jan 1st',
         calories: 3400,
         display: 'green',
+        showDateSprite: true,
         entries: [
           {
             date: 'Jan 1st',
@@ -43,6 +46,7 @@ angular.module('mean.dashboard', ['ui.bootstrap']).controller('DashboardControll
       },
       { date: 'Jan 2nd',
         calories: 3400,
+        showDateSprite: true,
         display: 'red',
         entries: [
           {
@@ -88,3 +92,7 @@ angular.module('mean.dashboard', ['ui.bootstrap']).controller('DashboardControll
 
   }
 ]);
+
+app.run(function(editableOptions) {
+  editableOptions.theme = 'bs3'; // bootstrap3 theme. Can be also 'bs2', 'default'
+});
