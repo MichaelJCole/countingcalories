@@ -11,26 +11,32 @@
 .journalCell {
   font-size: 14pt;
   border: none;
-  display: table-cell;
   width: 143px;
   padding: 5px;
   margin: 0px;
+}
+.journalCell .editable-wrap {
+  width: 100%;
+}
+.journalCell input {
+  font-size: 14pt;
 }
 
 .journalHeader .journalCell {
   font-size: 20pt;
 }
 
-.journalTime {
-  text-align: right;
-  padding-right: 30px;
-}
 .journalDescription {
   width: 570px;
 }
-.journalCalories {
+
+.journalTime, 
+.journalTime input,
+.journalCalories, 
+.journalCalories input {
   text-align: right;
 }
+
 .journalTools {
   text-align: right;
   width: 102px;

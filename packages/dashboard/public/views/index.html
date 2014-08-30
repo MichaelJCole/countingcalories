@@ -122,7 +122,7 @@
 
     <!-- Journal Table -->
 
-    <table class="journalEntries">
+    <table class="journalEntries" style="width: 100%;">
       <thead>
         <tr class="journalRow journalHeader">
 
@@ -177,10 +177,10 @@
           </td>
 
           <!-- Maket the item cells-->
-          <td
+          <td class="journalCell journalDate"
             ng-hide="date.showDateSprite">
 
-            <span class="journalCell journalDate" 
+            <span
               editable-text="item.date"
               e-name="date" 
               e-form="rowform">
@@ -188,8 +188,8 @@
             </span>
           </td>
 
-          <td>
-            <span class="journalCell journalTime" 
+          <td class="journalCell journalTime">
+            <span
               editable-text="item.time"
               e-name="date" 
               e-form="rowform">
@@ -197,8 +197,8 @@
             </span>
           </td>
 
-          <td>
-            <span class="journalCell journalDescription"
+          <td class="journalCell journalDescription">
+            <span
               editable-text="item.description"
               e-name="description" 
               e-form="rowform">
@@ -206,8 +206,8 @@
             </span>
           </td>
 
-          <td>
-            <span class="journalCell journalCalories"
+          <td class="journalCell journalCalories">
+            <span
               editable-text="item.calories"
               e-name="calories" 
               e-form="rowform">
