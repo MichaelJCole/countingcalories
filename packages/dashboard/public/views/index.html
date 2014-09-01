@@ -36,7 +36,6 @@
 
       <h2 style="font-weight:bold;">
         Add Journal Entry: 
-        <span class="label label-success">Added!</span>
       </h2>
       
       <table class="journalEntries" style="width: 100%;">
@@ -56,6 +55,7 @@
                   show-weeks="false" 
                   show-button-bar="false" 
                   date-disabled="disabled(date, mode)" 
+                  placeholder="Date?"
                   close-text="Close"/>
               </div>
             </td>
@@ -64,8 +64,10 @@
               <div class="form-group">
                 <timepicker-pop class="input-group"
                   ng-model="newTime"
+                  ng-required="true"
                   input-time="newTime"  
                   disabled="disabled"
+                  placeholder="Time?"
                   show-meridian="false"></timepicker-pop>
               </div>
             </td>
@@ -73,7 +75,10 @@
             <td class="journalCell journalDescription">
               <div class="form-group">
                 <input type="text" class="form-control" 
-                  id="addDescription" placeholder="Description?">
+                  ng-model="newDescription"
+                  placeholder="Description?"
+                  ng-required="true"
+                  >
               </div>
             </td>
 
@@ -82,7 +87,8 @@
                 <input id="addCalories" class="form-control"
                   type="text" maxlength="4"
                   placeholder="Calories?"
-                  ng-model="addCalories"
+                  ng-model="newCalories"
+                  ng-required="true"
                   ng-model-onblur
                   ng-pattern="/^[0-9]{1,7}$/">
               </div>

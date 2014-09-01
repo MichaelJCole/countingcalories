@@ -9,6 +9,12 @@
 #addForm .journalDescription .form-group {
   width: 100%;
 }
+#addForm .journalTools div,
+#addForm .journalTools button {
+  width: 100%;
+}
+
+
 /* Filter forms */
 .indent {
   padding-left: 100px;
@@ -48,7 +54,7 @@
 }
 
 .journalTools {
-  text-align: right;
+  text-align: left;
   width: 102px;
 }
 
