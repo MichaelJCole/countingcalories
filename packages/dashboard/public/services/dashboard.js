@@ -154,7 +154,7 @@ angular.module('mean.dashboard')
 
         },
         template : "
-<input type='text' class='form-control input-lg' 
+<input type='text' class='form-control' 
   ng-model='inputTime'
   ng-disabled='disabledInt' 
   time-format 
@@ -162,7 +162,7 @@ angular.module('mean.dashboard')
   ng-focus='open()' />
 <div class='input-group-btn' 
   ng-class='{open:isOpen}'>
-  <button type='button btn-lg' 
+  <button type='button' 
     ng-disabled='disabledInt' class='btn btn-default ' 
     ng-class=\"{'btn-primary':isOpen}\" 
     data-toggle='dropdown' 

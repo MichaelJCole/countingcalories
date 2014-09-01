@@ -6,7 +6,9 @@
 #addForm .form-control {
   width: 100% !important;
 }
-
+#addForm .journalDescription .form-group {
+  width: 100%;
+}
 /* Filter forms */
 .indent {
   padding-left: 100px;

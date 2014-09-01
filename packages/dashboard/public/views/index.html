@@ -15,8 +15,7 @@
               placeholder="How many?"
               ng-model="calorieGoal"
               ng-model-onblur
-              ng-pattern="/^[0-9]{1,7}$/"
-              ng-change="">
+              ng-pattern="/^[0-9]{1,7}$/">
             <label for="calorieGoal"> calories per day.</label>
 
             <span class="label label-success"
@@ -48,7 +47,7 @@
             <td class="journalCell journalDate">
               <div class="form-group"
                 ng-click="open($event)">
-                <input type="text" class="form-control input-lg" 
+                <input type="text" class="form-control input" 
                   ng-model="newDate" 
                   ng-required="true"
                   datepicker-popup="{{format}}" 
@@ -63,7 +62,7 @@
 
             <td class="journalCell journalTime">
               <div class="form-group">
-                <timepicker-pop class="input-group input-lg"
+                <timepicker-pop class="input-group"
                   ng-model="newTime"
                   input-time="newTime"  
                   disabled="disabled"
@@ -73,20 +72,26 @@
 
             <td class="journalCell journalDescription">
               <div class="form-group">
-                <input style="width: 580px;;" type="text" class="form-control input-lg" id="addDescription" placeholder="Description?">
+                <input type="text" class="form-control" 
+                  id="addDescription" placeholder="Description?">
               </div>
             </td>
 
             <td class="journalCell journalCalories">
               <div class="form-group">
-                <input style="width: 140px;" type="text" class="form-control input-lg" id="addCalories" placeholder="Calories?">
+                <input id="addCalories" class="form-control"
+                  type="text" maxlength="4"
+                  placeholder="Calories?"
+                  ng-model="addCalories"
+                  ng-model-onblur
+                  ng-pattern="/^[0-9]{1,7}$/">
               </div>
             </td>
 
             <td class="journalCell journalTools">
               <div class="form-group">
                 <div class="input-group">
-                  <button type="submit" class="btn btn-lg btn-primary">
+                  <button type="submit" class="btn btn-primary">
                     <i class="glyphicon glyphicon-plus"></i> 
                     <b>Add</b>
                   </button>
