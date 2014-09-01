@@ -2,11 +2,10 @@
 .nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
 
 
-/* destination animations */
-.my-special-animation.ng-enter.ng-enter-active {
-  background:blue;
+/* Add form */
+#addForm .form-control {
+  width: 100% !important;
 }
-
 
 /* Filter forms */
 .indent {
@@ -16,16 +15,14 @@
 
 /* Calorie Journal table */
 
-.journalEntries tbody {
-}
-
 .journalCell {
   font-size: 14pt;
   border: none;
-  width: 143px;
+  width: 130px;
   padding: 5px;
   margin: 0px;
 }
+/* Make description edit take up full width */
 .journalCell .editable-wrap {
   width: 100%;
 }
@@ -38,7 +35,7 @@
 }
 
 .journalDescription {
-  width: 570px;
+  width: auto;
 }
 
 .journalTime, 
@@ -55,6 +52,8 @@
 
 .journalDateRow {
   border-bottom: 4px solid white;
+}
+.journalDateRow.green {
   background-color: #CBE8BA;
 }
 

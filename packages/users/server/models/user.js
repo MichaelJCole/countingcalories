@@ -70,7 +70,10 @@ var UserSchema = new Schema({
   twitter: {},
   github: {},
   google: {},
-  linkedin: {}
+  linkedin: {},
+
+  // Application data
+  calorieGoal: false
 });
 
 /**

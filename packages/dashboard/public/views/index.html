@@ -1,4 +1,5 @@
-<div class="" data-ng-controller="DashboardController">
+<div class="" 
+  data-ng-controller="DashboardController">
 
   <!-- Calorie Goal -->
 
@@ -9,7 +10,13 @@
 
         <h2>
             <label for="calorieGoal">Goal: </label>
-            <input style="width: 140px;" type="text" class="form-control input-lg" id="calorieGoal" placeholder="How many?">
+            <input id="calorieGoal" class="form-control input-lg"style="width: 140px;" 
+              type="text" maxlength="4"
+              placeholder="How many?"
+              ng-model="calorieGoal"
+              ng-model-onblur
+              ng-pattern="/^[0-9]{1,7}$/"
+              ng-change="">
             <label for="calorieGoal"> calories per day.</label>
 
             <span class="label label-success"
@@ -26,31 +33,73 @@
   <!-- Add Journal Entry -->
 
   <div class="dashboard-section">
-    <form class="form-inline" role="form">
-      <div class="form-group">
+    <form id="addForm" class="form-inline" role="form">
 
-        <h2 style="font-weight:bold;">Add Journal Entry: <span class="label label-success">Added!</span></h2>
-        
-        <label class="sr-only" for="addDate">Date</label>
-        <input style="width: 140px;" type="text" class="form-control input-lg" id="addDate" placeholder="Date?">
+      <h2 style="font-weight:bold;">
+        Add Journal Entry: 
+        <span class="label label-success">Added!</span>
+      </h2>
+      
+      <table class="journalEntries" style="width: 100%;">
+        <tbody class="journalDateRow">
 
-        <label class="sr-only" for="addTime">Time</label>
-        <input style="width: 140px;" type="text" class="form-control input-lg" id="addTime" placeholder="Time?">
+          <tr class="journalItem">
 
-        <label class="sr-only" for="addDate">Description</label>
-        <input style="width: 580px;;" type="text" class="form-control input-lg" id="addDescription" placeholder="Description?">
+            <td class="journalCell journalDate">
+              <div class="form-group"
+                ng-click="open($event)">
+                <input type="text" class="form-control input-lg" 
+                  ng-model="newDate" 
+                  ng-required="true"
+                  datepicker-popup="{{format}}" 
+                  is-open="opened" 
+                  max-date="today"
+                  show-weeks="false" 
+                  show-button-bar="false" 
+                  date-disabled="disabled(date, mode)" 
+                  close-text="Close"/>
+              </div>
+            </td>
 
-        <label class="sr-only" for="addDate">Calories</label>
-        <input style="width: 140px;" type="text" class="form-control input-lg" id="addCalories" placeholder="Calories?">
+            <td class="journalCell journalTime">
+              <div class="form-group">
+                <timepicker-pop class="input-group input-lg"
+                  ng-model="newTime"
+                  input-time="newTime"  
+                  disabled="disabled"
+                  show-meridian="false"></timepicker-pop>
+              </div>
+            </td>
 
-        <button type="submit" class="btn btn-lg btn-primary">
-          <i class="glyphicon glyphicon-plus"></i> 
-          <b>Add</b>
-        </button>
-      </div>
+            <td class="journalCell journalDescription">
+              <div class="form-group">
+                <input style="width: 580px;;" type="text" class="form-control input-lg" id="addDescription" placeholder="Description?">
+              </div>
+            </td>
 
+            <td class="journalCell journalCalories">
+              <div class="form-group">
+                <input style="width: 140px;" type="text" class="form-control input-lg" id="addCalories" placeholder="Calories?">
+              </div>
+            </td>
+
+            <td class="journalCell journalTools">
+              <div class="form-group">
+                <div class="input-group">
+                  <button type="submit" class="btn btn-lg btn-primary">
+                    <i class="glyphicon glyphicon-plus"></i> 
+                    <b>Add</b>
+                  </button>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </form>
   </div>
+
+  <pre>New Entry is: <em>{{newDate}}, {{newTime}}, {{newDescription}}, {{newCalories}}</em></pre>
 
 
   <!-- Table of Journal Entries -->
@@ -167,7 +216,7 @@
 
         <tr class="journalItem" 
           ng-repeat="item in date.entries"
-          ng-show="item.filterDate && item.filterTime"
+          ng-show="item.filterDate && item.filterTime">
 
           <!-- Make the Date and Calories badge -->
           <td class="journalCell journalDate" style="position: relative;"

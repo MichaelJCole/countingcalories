@@ -1,8 +1,8 @@
 'use strict';
 
-var app = angular.module('mean.dashboard', ['ui.bootstrap', 'ngAnimate']);
+var dashboardApp = angular.module('mean.dashboard', ['ui.bootstrap', 'ngAnimate']);
 
-app.controller('DashboardController', ['$scope', 'Global', 'Dashboard',
+dashboardApp.controller('DashboardController', ['$scope', 'Global', 'Dashboard',
   function($scope, Global, Dashboard) {
     $scope.global = Global;
     $scope.package = {
@@ -144,9 +144,21 @@ app.controller('DashboardController', ['$scope', 'Global', 'Dashboard',
       }
     };
 
+    // ///
+
+    $scope.open = function($event) {
+      $event.preventDefault();
+      $event.stopPropagation();
+
+      $scope.opened = true;
+    };
+
+    $scope.initDate = new Date();
+
+    // ///
   }
 ]);
 
-app.run(function(editableOptions) {
+dashboardApp.run(function(editableOptions) {
   editableOptions.theme = 'bs3'; // bootstrap3 theme. Can be also 'bs2', 'default'
 });
