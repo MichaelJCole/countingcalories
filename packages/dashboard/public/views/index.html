@@ -1,5 +1,4 @@
-<div class="" 
-  data-ng-controller="DashboardController">
+<div>
 
   <!-- Calorie Goal -->
 
@@ -9,14 +8,16 @@
       <div class="form-group">
 
         <h2>
-            <label for="calorieGoal">Goal: </label>
-            <input id="calorieGoal" class="form-control input-lg"style="width: 140px;" 
+            {{goal}}
+            <label for="goal">Goal: </label>
+            <input id="goal" class="form-control input-lg"style="width: 140px;" 
               type="text" maxlength="4"
               placeholder="How many?"
-              ng-model="calorieGoal"
+              ng-model="goal"
+              ng-change="onGoalChange(goal)"
               ng-model-onblur
               ng-pattern="/^[0-9]{1,7}$/">
-            <label for="calorieGoal"> calories per day.</label>
+            <label for="goal"> calories per day.</label>
 
             <span class="label label-success"
               ng-show="">
@@ -50,7 +51,7 @@
                   ng-model="newDate" 
                   ng-required="true"
                   datepicker-popup="{{format}}" 
-                  is-open="opened" 
+                  is-open="datePickerOpen" 
                   max-date="today"
                   show-weeks="false" 
                   show-button-bar="false" 
@@ -63,11 +64,11 @@
             <td class="journalCell journalTime">
               <div class="form-group">
                 <timepicker-pop class="input-group"
-                  ng-model="newTime"
+                  ng-model="newDate"
                   ng-required="true"
-                  input-time="newTime"  
-                  disabled="disabled"
+                  input-time="newDate"
                   placeholder="Time?"
+                  is-open="timePickerOpen"
                   show-meridian="false"></timepicker-pop>
               </div>
             </td>
@@ -286,7 +287,7 @@
             <form class="form-buttons form-inline" 
               editable-form 
               name="rowform" 
-              XXonbeforesave="saveUser($data, user.id)" 
+              onaftersave="saveRow($data)" 
               ng-show="rowform.$visible" 
               shown="inserted == item">
   
