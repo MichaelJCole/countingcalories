@@ -1,26 +1,24 @@
 'use strict';
 
-// The Package is past automatically as first parameter
-module.exports = function(Dashboard, app, auth, database) {
+var dashboard = require('../controllers/dashboard');
 
-  app.get('/dashboard/example/anyone', function(req, res, next) {
-    res.send('Anyone can access this');
-  });
+module.exports = function(Journal, app, auth) {
 
-  app.get('/dashboard/example/auth', auth.requiresLogin, function(req, res, next) {
-    res.send('Only authenticated users can access this');
-  });
+  app.route('/api/1.0/calorieGoal')
+    .get(auth.requiresLogin, dashboard.goalSet)
+    .post(auth.requiresLogin, dashboard.goalGet);
 
-  app.get('/dashboard/example/admin', auth.requiresAdmin, function(req, res, next) {
-    res.send('Only users with Admin role can access this');
-  });
+/*
+  app.route('/api/1.0/journal/:journalId')
+    .get(auth.requiresLogin, dashboard.journalList);
 
-  app.get('/dashboard/example/render', function(req, res, next) {
-    Dashboard.render('index', {
-      package: 'dashboard'
-    }, function(err, html) {
-      //Rendering a view from the Package server/views
-      res.send(html);
-    });
-  });
+  app.route('/api/1.0/journal/:journalId')
+    .post(auth.requiresLogin, dashboard.journalCreate)
+    .get(auth.requiresLogin, dashboard.journalRead)
+    .put(auth.requiresLogin, dashboard.journalUpdate)
+    .delete(auth.requiresLogin, dashboard.journalDelete);
+
+  // Finish with setting up the articleId param
+  app.param('journalId', dashboard.journalEntry);
+*/
 };
