@@ -60,14 +60,25 @@ angular.module('mean.dashboard')
     };
 
     // ng-submit for the add form
+    $scope.addSaveRow = function($data) {
+      console.log(arguments.callee.name;);
+      console.log($data);
+    };
+
     // filters look into angular filter on the collection.  Not the constant!  Use filter called 'filter'
     // https://docs.angularjs.org/api/ng/filter/filter
 
     // onaftersave for the edit forms
-    $scope.saveRow = function($data) {
+    $scope.editSaveRow = function($data) {
+      console.log(arguments.callee.name;);
       console.log($data);
     };
 
+    // delete button on inline edit
+    $scope.editDeleteRow = function($index) {
+      console.log(arguments.callee.name;);
+      console.log($index);
+    };
 
     // Mock data
 

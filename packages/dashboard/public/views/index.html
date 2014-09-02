@@ -111,8 +111,6 @@
     </form>
   </div>
 
-  <pre>New Entry is: <em>{{newDate}}, {{newTime}}, {{newDescription}}, {{newCalories}}</em></pre>
-
 
   <!-- Table of Journal Entries -->
 
@@ -257,7 +255,7 @@
           <td class="journalCell journalTime">
             <span
               editable-text="item.time"
-              e-name="date" 
+              e-name="time" 
               e-form="rowform">
                 {{ item.time }}
             </span>
@@ -287,7 +285,7 @@
             <form class="form-buttons form-inline" 
               editable-form 
               name="rowform" 
-              onaftersave="saveRow($data)" 
+              onaftersave="editSaveRow($data)" 
               ng-show="rowform.$visible" 
               shown="inserted == item">
   
@@ -309,7 +307,7 @@
                 <i class="glyphicon glyphicon-edit"></i> 
               </button>
               <button class="btn btn-danger" 
-                ng-click="removeUser($index)">
+                ng-click="editDeleteRow($index)">
                   <i class="glyphicon glyphicon-trash"></i> 
               </button>
             </div>
