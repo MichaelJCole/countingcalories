@@ -7,7 +7,7 @@ angular.module('mean.dashboard')
  * Anularjs Module for pop up timepicker
  */
 
-.directive('timeFormat', function() {
+.directive('timeFormat', function($filter) {
   return {
     restrict : 'A',
     require : 'ngModel',
@@ -49,8 +49,22 @@ angular.module('mean.dashboard')
           return undefined;
         }
       };
-      // FIXME Is this really needed?
-      parseTime('12');
+
+      ngModel.$parsers.push(parseTime);
+
+      var showTime = function(data) {
+        parseTime(data);
+        var timeFormat = (!scope.showMeridian) ? "HH:mm" : "hh:mm a";
+        return $filter('date')(data, timeFormat);
+      };
+      ngModel.$formatters.push(showTime);
+      scope.$watch('showMeridian', function(value) {
+        var myTime = ngModel.$modelValue;
+        if (myTime) {
+          element.val(showTime(myTime));
+        }
+
+      });
     }
   };
 });

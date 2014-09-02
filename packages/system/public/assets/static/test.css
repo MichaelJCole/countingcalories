@@ -14,6 +14,10 @@
   width: 100%;
 }
 
+timepicker-pop .dropdown-menu {
+  min-width: 100px;
+  padding: 20px;
+}
 
 /* Filter forms */
 .indent {

@@ -94,7 +94,7 @@ angular.module('mean.dashboard')
       '    <div class="dropdown-menu pull-right"> ' +
       '      <timepicker ' +
       '        ng-model="inputTime" ' +
-      '        show-meridian="true"></timepicker> ' +
+      '        show-meridian="showMeridian"></timepicker> ' +
       '    </div> ' +
       '</div>'
   };
