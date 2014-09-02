@@ -14,15 +14,33 @@ angular.module('mean.dashboard')
     };
 
 
-    // Attributes
+    // Controller state
 
+    // UI
     $scope.showDateFilter = false;
     $scope.showTimeFilter = false;
-
     $scope.timePickerOpen = false;
     $scope.datePickerOpen = false;
 
+    $scope.alerts={ goal:[], add:[], filter:[], edit:[] };
 
+    // Model
+    $scope.goal;  // loaded in Data Events below
+    $scope.journalEntries = []; // loaded in Data Events below
+    $scope.journalEntry = { date: new Date(), description: "", calories: ""};
+
+    $scope.filter = {
+      date: {
+        from: 'Jan 1',
+        to: 'Jan 4',
+        active: true
+      },
+      time: {
+        from: '12p',
+        to: '1p',
+        active: true
+      }
+    };
     // Methods
 
     // Date picker open
@@ -38,181 +56,87 @@ angular.module('mean.dashboard')
 
     // Events / handlers
 
+    // Open/close pickers
     $scope.$watch('timePickerOpen', function(newValue, oldValue) {
       if (newValue) {
         $scope.datePickerOpen = false;
       }
     });
 
+    // Alerts
+    $scope.addAlert = function(alertGroup, message, type) {
+      $scope.alerts[alertGroup].push({msg: message, type: type, close: true});
+    };
+
+    $scope.closeAlert = function(alertGroup, index) {
+      $scope.alerts[alertGroup].splice(index, 1);
+    };
+
 
     // Data Events
     
+    // Load goal from API
+    $http.get('dashboard/api/1.0/goal')
+      .success(function(data, status, headers, config) {
+        $scope.goal = data.goal;
+      })
+      .error(function(data, status, headers, config) {
+        $scope.addAlert('goal', 'Server error', 'danger');
+      });
+
     // Function to save goal when changes
     $scope.onGoalChange = function(goal) {
-      $http.post('url', goal)
+      $http.post('dashboard/api/1.0/goal', angular.toJson({goal: goal}))
         .success(function() {
-          alert('success');
+          $scope.addAlert('goal', 'Yes!', 'success');
         })
         .error(function() {
-          alert('error');
+          $scope.addAlert('goal', 'Server error', 'danger');
         });
-      console.log('Change to ' + goal);
     };
 
+
+
     // ng-submit for the add form
-    $scope.addSaveRow = function($data) {
-      console.log(arguments.callee.name;);
+    $scope.addSaveRow = function() {
+      // FIXME: put this code in a http callback
+      $scope.journalEntries.push($scope.journalEntry);
+      $scope.journalEntry = { date: new Date(), description: "", calories: ""};
+      $scope.addAlert('add', 'Added', 'success');
+      console.log($scope.journalEntries);
+    };
+
+
+
+    // onaftersave for the edit forms
+    $scope.editSaveRow = function($data) {
+      // FIXME: put this code in a http callback
+      // is model automatically updated?
+      console.log('editSaveRow');
       console.log($data);
+      $scope.addAlert('edit', 'Saved', 'success');
+    };
+
+    // delete button on inline edit
+    $scope.editDeleteRow = function($index) {
+      $scope.journalEntries.splice($index, 1);
+      $scope.addAlert('edit', 'Deleted', 'success');
     };
 
     // filters look into angular filter on the collection.  Not the constant!  Use filter called 'filter'
     // https://docs.angularjs.org/api/ng/filter/filter
 
-    // onaftersave for the edit forms
-    $scope.editSaveRow = function($data) {
-      console.log(arguments.callee.name;);
-      console.log($data);
-    };
-
-    // delete button on inline edit
-    $scope.editDeleteRow = function($index) {
-      console.log(arguments.callee.name;);
-      console.log($index);
-    };
-
-    // Mock data
-
+    // Mockup data
+    
     $scope.journalEntries = [
-      { date: 'Jan 1st',
-        calories: 3400,
-        display: 'green',
-        showDateSprite: false,
-        entries: [
-          {
-            date: 'Jan 1st',
-            time: '12pm',
-            filterDate: true,
-            filterTime: true,
-            description: 'Lunch ad Midas Touch',
-            calories: '1200'
-          },
-          {
-            date: 'Jan 1st',
-            time: '1pm',
-            filterDate: true,
-            filterTime: true,
-            description: 'Pastry at La Boulangerie',
-            calories: '800'
-          },
-          {
-            date: 'Jan 1st',
-            time: '3pm',
-            filterDate: true,
-            filterTime: true,
-            description: 'Horchata tea',
-            calories: '200'
-          },
-          {
-            date: 'Jan 1st',
-            time: '5pm',
-            filterDate: true,
-            filterTime: true,
-            description: 'Burger and salad at Charlito\'s',
-            calories: '1200'
-          }
-        ]
-      },
-      { date: 'Jan 2nd',
-        calories: 3400,
-        showDateSprite: false,
-        display: 'red',
-        entries: [
-          {
-            date: 'Jan 2nd',
-            time: '12pm',
-            filterDate: true,
-            filterTime: true,
-            description: 'Lunch ad Midas Touch',
-            calories: '1200'
-          },
-          {
-            date: 'Jan 2nd',
-            time: '1pm',
-            filterDate: true,
-            filterTime: true,
-            description: 'Pastry at La Boulangerie',
-            calories: '800'
-          },
-          {
-            date: 'Jan 2nd',
-            time: '3pm',
-            filterDate: true,
-            filterTime: false,
-            description: 'Horchata tea',
-            calories: '200'
-          },
-          {
-            date: 'Jan 2nd',
-            time: '5pm',
-            filterDate: false,
-            filterTime: true,
-            description: 'Burger and salad at Charlito\'s',
-            calories: '1200'
-          }
-        ]
-      },      { date: 'Jan 3rd',
-        calories: 3400,
-        showDateSprite: false,
-        display: 'red',
-        entries: [
-          {
-            date: 'Jan 3rd',
-            time: '12pm',
-            filterDate: true,
-            filterTime: true,
-            description: 'Lunch ad Midas Touch',
-            calories: '1200'
-          },
-          {
-            date: 'Jan 3rd',
-            time: '1pm',
-            filterDate: true,
-            filterTime: true,
-            description: 'Pastry at La Boulangerie',
-            calories: '800'
-          },
-          {
-            date: 'Jan 3rd',
-            time: '3pm',
-            filterDate: true,
-            filterTime: false,
-            description: 'Horchata tea',
-            calories: '200'
-          },
-          {
-            date: 'Jan 3rd',
-            time: '5pm',
-            filterDate: false,
-            filterTime: true,
-            description: 'Burger and salad at Charlito\'s',
-            calories: '1200'
-          }
-        ]
-      },
+      { date: new Date(), description: "First", calories: "1000"},
+      { date: new Date(), description: "Second", calories: "100"},
+      { date: new Date(), description: "Third", calories: "1000"},
+      { date: new Date(), description: "First", calories: "100"},
+      { date: new Date(), description: "Second", calories: "1000"},
+      { date: new Date(), description: "Third", calories: "100"},
+      { date: new Date(), description: "First", calories: "1000"},
+
     ];
-
-    $scope.filter = {
-      dates: {
-        from: 'Jan 1',
-        to: 'Jan 4',
-        active: true
-      },
-      times: {
-        from: '12p',
-        to: '1p',
-        active: true
-      }
-    };
-
   }
 ]);

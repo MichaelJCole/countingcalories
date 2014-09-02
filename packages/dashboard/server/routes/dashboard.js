@@ -4,9 +4,9 @@ var dashboard = require('../controllers/dashboard');
 
 module.exports = function(Journal, app, auth) {
 
-  app.route('/api/1.0/calorieGoal')
-    .get(auth.requiresLogin, dashboard.goalSet)
-    .post(auth.requiresLogin, dashboard.goalGet);
+  app.route('/dashboard/api/1.0/goal')
+    .get(auth.requiresLogin, dashboard.goalGet)
+    .post(auth.requiresLogin, dashboard.goalSet);
 
 /*
   app.route('/api/1.0/journal/:journalId')

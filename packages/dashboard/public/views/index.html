@@ -5,10 +5,17 @@
   <div class="dashboard-section">
 
     <form class="form-inline" role="form">
+
+      <div>
+        <alert class="alert-sm"
+          ng-repeat="alert in alerts.goal" type="{{alert.type}}" close="closeAlert('goal', $index)">
+          {{alert.msg}}
+        </alert>
+      </div>
+
       <div class="form-group">
 
         <h2>
-            {{goal}}
             <label for="goal">Goal: </label>
             <input id="goal" class="form-control input-lg"style="width: 140px;" 
               type="text" maxlength="4"
@@ -18,14 +25,9 @@
               ng-model-onblur
               ng-pattern="/^[0-9]{1,7}$/">
             <label for="goal"> calories per day.</label>
-
-            <span class="label label-success"
-              ng-show="">
-              Yes!
-            </span>
         </h2>
-      
       </div>
+
     </form>
   </div>
 
@@ -33,7 +35,15 @@
   <!-- Add Journal Entry -->
 
   <div class="dashboard-section">
-    <form id="addForm" class="form-inline" role="form">
+    <form id="addForm" class="form-inline" role="form"
+      ng-submit="addSaveRow()">
+
+      <div>
+        <alert class="alert-sm"
+          ng-repeat="alert in alerts.add" type="{{alert.type}}" close="closeAlert('add', $index)">
+          {{alert.msg}}
+        </alert>
+      </div>
 
       <h2 style="font-weight:bold;">
         Add Journal Entry: 
@@ -48,7 +58,7 @@
               <div class="form-group"
                 ng-click="open($event)">
                 <input type="text" class="form-control input" 
-                  ng-model="newDate" 
+                  ng-model="journalEntry.date" 
                   ng-required="true"
                   datepicker-popup="{{format}}" 
                   is-open="datePickerOpen" 
@@ -64,9 +74,9 @@
             <td class="journalCell journalTime">
               <div class="form-group">
                 <timepicker-pop class="input-group"
-                  ng-model="newDate"
+                  ng-model="journalEntry.date"
                   ng-required="true"
-                  input-time="newDate"
+                  input-time="journalEntry.date"
                   placeholder="Time?"
                   is-open="timePickerOpen"
                   show-meridian="false"></timepicker-pop>
@@ -76,7 +86,7 @@
             <td class="journalCell journalDescription">
               <div class="form-group">
                 <input type="text" class="form-control" 
-                  ng-model="newDescription"
+                  ng-model="journalEntry.description"
                   placeholder="Description?"
                   ng-required="true"
                   >
@@ -88,7 +98,7 @@
                 <input id="addCalories" class="form-control"
                   type="text" maxlength="4"
                   placeholder="Calories?"
-                  ng-model="newCalories"
+                  ng-model="journalEntry.calories"
                   ng-required="true"
                   ng-model-onblur
                   ng-pattern="/^[0-9]{1,7}$/">
@@ -139,18 +149,19 @@
       <div class="form-group">
         <!-- Starting and ending date controls -->
         <label class="sr-only" for="startDate">Start Date</label>
-        <input style="width: 140px;" type="text" class="form-control input-lg" id="startDate" placeholder="Starting?">
+        <input style="width: 140px;" type="text" class="form-control input-lg" id="startDate" placeholder="Starting?"
+          ng-model="filter.date.from">
         -
         <label class="sr-only" for="endDate">End Date</label>
-        <input style="width: 140px;" type="text" class="form-control input-lg" id="endDate" placeholder="Ending?">
+        <input style="width: 140px;" type="text" class="form-control input-lg" id="endDate" placeholder="Ending?"
+          ng-model="filter.date.to">
         <!-- Filter button -->
         <button type="submit" class="btn btn-primary">
           <i class="glyphicon glyphicon-filter"></i> 
           <b>Filter</b>
         </button>
         <!-- Cancel button -->
-        <button type="submit" class="btn btn-default"
-          ng-click="showDateFilter=false">
+        <button type="submit" class="btn btn-default">
           Cancel
         </button>
       </div>
@@ -165,10 +176,12 @@
       <div class="form-group">
         <!-- Starting and ending time controls -->
         <label class="sr-only" for="startDate">Start Time</label>
-        <input style="width: 140px;" type="text" class="form-control input-lg" id="startTime" placeholder="Starting?">
+        <input style="width: 140px;" type="text" class="form-control input-lg" id="startTime" placeholder="Starting?"
+          ng-model="filter.time.from">
         -
         <label class="sr-only" for="endDate">End Time</label>
-        <input style="width: 140px;" type="text" class="form-control input-lg" id="endTime" placeholder="Ending?">
+        <input style="width: 140px;" type="text" class="form-control input-lg" id="endTime" placeholder="Ending?"
+          ng-model=filter.time.to>
         <!-- Filter button -->
         <button type="submit" class="btn btn-primary">
           <i class="glyphicon glyphicon-filter"></i> 
@@ -184,6 +197,13 @@
 
 
     <!-- Journal Table -->
+
+    <div>
+      <alert class="alert-sm"
+        ng-repeat="alert in alerts.edit" type="{{alert.type}}" close="closeAlert('edit', $index)">
+        {{alert.msg}}
+      </alert>
+    </div>
 
     <table class="journalEntries" style="width: 100%;">
       <thead>
@@ -222,13 +242,13 @@
       </thead> <!-- journalHeader -->
 
       <tbody class="journalDateRow" ng-class="date.display" 
-        ng-repeat="date in journalEntries">
+        xxxng-repeat="date in journalEntries">
 
         <tr class="journalItem" 
-          ng-repeat="item in date.entries"
-          ng-show="item.filterDate && item.filterTime">
+          ng-repeat="journalEntry in journalEntries">
 
           <!-- Make the Date and Calories badge -->
+          <!--
           <td class="journalCell journalDate" style="position: relative;"
             ng-show="date.showDateSprite">
 
@@ -238,44 +258,44 @@
               <div class="spriteCount">{{date.calories}}</div>
               <div class="spriteLabel">calories</div>
             </span>
-          </td>
+          </td> -->
 
-          <!-- Maket the item cells-->
-          <td class="journalCell journalDate"
-            ng-hide="date.showDateSprite">
+          <!-- Make the item cells-->
+          <td class="journalCell journalDate">
 
             <span
-              editable-text="item.date"
+              editable-bsdate="journalEntry.date" 
+              e-datepicker-popup="yyyy-MM-dd"
               e-name="date" 
               e-form="rowform">
-                {{ item.date }}
+                {{ journalEntry.date }}
             </span>
           </td>
 
           <td class="journalCell journalTime">
             <span
-              editable-text="item.time"
-              e-name="time" 
+              editable-text="journalEntry.time"
+              e-name="date" 
               e-form="rowform">
-                {{ item.time }}
+                {{ journalEntry.time }}
             </span>
           </td>
 
           <td class="journalCell journalDescription">
             <span
-              editable-text="item.description"
+              editable-text="journalEntry.description"
               e-name="description" 
               e-form="rowform">
-                {{ item.description }}
+                {{ journalEntry.description }}
             </span>
           </td>
 
           <td class="journalCell journalCalories">
             <span
-              editable-text="item.calories"
+              editable-text="journalEntry.calories"
               e-name="calories" 
               e-form="rowform">
-                {{ item.calories }}
+                {{ journalEntry.calories }}
             </span>
           </td>
 

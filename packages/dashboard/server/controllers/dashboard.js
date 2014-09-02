@@ -3,46 +3,45 @@
 /**
  * Module dependencies.
  */
-var //mongoose = require('mongoose'),
+var mongoose = require('mongoose'),
   //Journal = mongoose.model('Journal'),
-  //Goal = mongoose.model('Goal'),
+  Goal = mongoose.model('Goal'),
   _ = require('lodash');
 
+
 /**
- * Set the user's calorie goal
+ * Find Goal by user.id
  */
-exports.goalSet = function(req, res) {
-  res.json({'goal':2345});
-  /*
-  var goal = new Goal(req.body);
-  goal.user = req.user;
-  goal.goal = req.calorieGoal;
-  goal.save(function(err) {
-    if (err) {
-      return res.json(500, {
-        error: 'Cannot save the goal'
-      });
-    }
-    res.json(goal);
-  });*/
+exports.goalSet = function(req, res, next) {
+  Goal.findOneAndUpdate( 
+    {'user' : req.user._id },
+    { goal: req.body.goal }, 
+    { upsert: true }, 
+    function(err) {
+      if (err) {
+        console.log(err);
+        return res.status(500).json({ error: err});       
+      }
+      res.json('ok');
+    } 
+  );
 };
+
 
 /**
  * Get the user's calorie goal
  */
 exports.goalGet = function(req, res) {
-  var goal = req.goal;
-
-  goal = _.extend(goal, req.body);
-
-  goal.save(function(err) {
-    if (err) {
-      return res.json(500, {
-        error: 'Cannot update the goal'
-      });
-    }
-    res.json(goal);
-  });
+  Goal.findOne( 
+    {'user' : req.user._id },
+    function(err, obj) {
+      if (err) {
+        console.log(err);
+        return res.status(500).json({ error: err});       
+      }
+      res.json({ goal: obj.goal });
+    } 
+  );
 };
 
 /*

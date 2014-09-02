@@ -54,7 +54,7 @@ angular.module('mean.dashboard')
 
       var showTime = function(data) {
         parseTime(data);
-        var timeFormat = (!scope.showMeridian) ? "HH:mm" : "hh:mm a";
+        var timeFormat = (!scope.showMeridian) ? 'HH:mm' : 'hh:mm a';
         return $filter('date')(data, timeFormat);
       };
       ngModel.$formatters.push(showTime);
