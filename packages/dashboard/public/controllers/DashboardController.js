@@ -2,8 +2,8 @@
 
 angular.module('mean.dashboard')
 
-.controller('DashboardController', ['$scope', '$http', 'Global', 'Dashboard',
-  function($scope, $http, Global, Dashboard) {
+.controller('DashboardController', ['$scope', '$http', 'Global',
+  function($scope, $http, Global) {
 
 
     // Constants and globals
