@@ -5,7 +5,7 @@
     "bitwise"       : true,     // true: Prohibit bitwise operators (&, |, ^, etc.)
     "camelcase"     : false,    // true: Identifiers must be in camelCase
     "curly"         : false,    // true: Require {} for every new block or scope
-    "eqeqeq"        : true,     // true: Require triple equals (===) for comparison
+    "eqeqeq"        : false,     // true: Require triple equals (===) for comparison
     "forin"         : false,    // true: Require filtering for..in loops with obj.hasOwnProperty()
     "immed"         : true,     // true: Require immediate invocations to be wrapped in parens e.g. `(function () { } ());`
     "indent"        : 2,        // {int} Number of spaces to use for indentation
@@ -14,7 +14,7 @@
     "noarg"         : true,     // true: Prohibit use of `arguments.caller` and `arguments.callee`
     "noempty"       : true,     // true: Prohibit use of empty blocks
     "nonew"         : true,     // true: Prohibit use of constructors for side-effects (without assignment)
-    "plusplus"      : true,     // true: Prohibit use of `++` & `--`
+    "plusplus"      : false,     // true: Prohibit use of `++` & `--`
     "quotmark"      : "single", // Quotation mark consistency:
                                 //   false    : do nothing (default)
                                 //   true     : ensure whatever is used is consistent
@@ -47,7 +47,7 @@
     "laxbreak"      : false,     // true: Tolerate possibly unsafe line breakings
     "laxcomma"      : false,     // true: Tolerate comma-first style coding
     "loopfunc"      : false,     // true: Tolerate functions being defined in loops
-    "multistr"      : false,     // true: Tolerate multi-line strings
+    "multistr"      : true,     // true: Tolerate multi-line strings
     "proto"         : false,     // true: Tolerate using the `__proto__` property
     "scripturl"     : false,     // true: Tolerate script-targeted URLs
     "shadow"        : false,     // true: Allows re-define variables later in code e.g. `var x=1; x=2;`
