@@ -71,9 +71,6 @@ var UserSchema = new Schema({
   github: {},
   google: {},
   linkedin: {},
-
-  // Application data
-  calorieGoal: false
 });
 
 /**
