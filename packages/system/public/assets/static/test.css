@@ -16,9 +16,10 @@
 
 
 /* Alerts */
-.alert-sm {
-  width: auto;
+.alert-container {
   display: inline-block;
+}
+.alert-inline {
 }
 
 /* Time picker */

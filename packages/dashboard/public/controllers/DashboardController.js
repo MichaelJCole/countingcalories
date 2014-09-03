@@ -7,6 +7,7 @@ angular.module('mean.dashboard')
 
 
     // Constants and globals
+    $scope.ALERT_TIMEOUT = 3000;
 
     $scope.global = Global;
     $scope.package = {
@@ -27,6 +28,7 @@ angular.module('mean.dashboard')
     // Model
     $scope.goal;  // loaded in Data Events below
     $scope.journalEntries = []; // loaded in Data Events below
+    $scope.journalEntriesGrouped = [];
     $scope.journalEntry = { date: new Date(), description: "", calories: ""};
 
     $scope.filter = {
@@ -65,7 +67,15 @@ angular.module('mean.dashboard')
 
     // Alerts
     $scope.addAlert = function(alertGroup, message, type) {
-      $scope.alerts[alertGroup].push({msg: message, type: type, close: true});
+      // Add the alert to the group
+      var alert = {msg: message, type: type, close: true};
+      $scope.alerts[alertGroup].push(alert);
+
+      // Set a timeout to close the oldest one
+      _.delay(function() {
+        $scope.closeAlert(alertGroup, 0);
+        $scope.$apply();
+      },$scope.ALERT_TIMEOUT);
     };
 
     $scope.closeAlert = function(alertGroup, index) {
@@ -101,9 +111,10 @@ angular.module('mean.dashboard')
     $scope.addSaveRow = function() {
       // FIXME: put this code in a http callback
       $scope.journalEntries.push($scope.journalEntry);
+      $scope.groupJournalEntries();
       $scope.journalEntry = { date: new Date(), description: "", calories: ""};
       $scope.addAlert('add', 'Added', 'success');
-      console.log($scope.journalEntries);
+      //console.log($scope.journalEntries);
     };
 
 
@@ -128,6 +139,12 @@ angular.module('mean.dashboard')
 
     // Mockup data
     
+    $scope.groupJournalEntries = function() {
+      $scope.journalEntriesGrouped = _.groupBy($scope.journalEntries, function(item) {
+        return new Date(item.date.getFullYear(), item.date.getMonth(), item.date.getDate());
+      });
+    };
+
     $scope.journalEntries = [
       { date: new Date(), description: "First", calories: "1000"},
       { date: new Date(), description: "Second", calories: "100"},
@@ -135,8 +152,10 @@ angular.module('mean.dashboard')
       { date: new Date(), description: "First", calories: "100"},
       { date: new Date(), description: "Second", calories: "1000"},
       { date: new Date(), description: "Third", calories: "100"},
-      { date: new Date(), description: "First", calories: "1000"},
-
+      { date: new Date(), description: "First", calories: "1000"}
     ];
+
+    $scope.groupJournalEntries();
+
   }
 ]);

@@ -6,27 +6,31 @@
 
     <form class="form-inline" role="form">
 
-      <div>
-        <alert class="alert-sm"
-          ng-repeat="alert in alerts.goal" type="{{alert.type}}" close="closeAlert('goal', $index)">
-          {{alert.msg}}
-        </alert>
-      </div>
+      <div class="row">
+        <div class="col-md-12">
 
-      <div class="form-group">
+          <div class="form-group">
+            <h2>
+                <label for="goal">Goal: </label>
+                <input id="goal" class="form-control input-lg"style="width: 140px;" 
+                  type="text" maxlength="4"
+                  placeholder="How many?"
+                  ng-model="goal"
+                  ng-change="onGoalChange(goal)"
+                  ng-model-onblur
+                  ng-pattern="/^[0-9]{1,7}$/">
+                <label for="goal"> calories per day.</label>
+            </h2>
+          </div>
 
-        <h2>
-            <label for="goal">Goal: </label>
-            <input id="goal" class="form-control input-lg"style="width: 140px;" 
-              type="text" maxlength="4"
-              placeholder="How many?"
-              ng-model="goal"
-              ng-change="onGoalChange(goal)"
-              ng-model-onblur
-              ng-pattern="/^[0-9]{1,7}$/">
-            <label for="goal"> calories per day.</label>
-        </h2>
-      </div>
+          <div class="alert-container">
+            <alert class="alert alert-inline"
+              ng-repeat="alert in alerts.goal" type="{{alert.type}}" close="closeAlert('goal', $index)">
+              {{alert.msg}}
+            </alert>
+          </div>
+
+        </div>
 
     </form>
   </div>
@@ -205,6 +209,16 @@
       </alert>
     </div>
 
+    <p ng-repeat="entry in journalEntries">
+    {{ entry }} </pre>
+    </p>
+    <hr/>
+    <p ng-repeat="ent in journalEntriesGrouped">
+    {{ ent }} </pre>
+    </p>
+
+    <!--
+
     <table class="journalEntries" style="width: 100%;">
       <thead>
         <tr class="journalRow journalHeader">
@@ -240,12 +254,12 @@
         </tr>
 
       </thead> <!-- journalHeader -->
-
+<!--
       <tbody class="journalDateRow" ng-class="date.display" 
-        xxxng-repeat="date in journalEntries">
+        ng-repeat="journalDay in journalEntries">
 
         <tr class="journalItem" 
-          ng-repeat="journalEntry in journalEntries">
+          ng-repeat="journalEntry in journalDay">
 
           <!-- Make the Date and Calories badge -->
           <!--
@@ -261,7 +275,7 @@
           </td> -->
 
           <!-- Make the item cells-->
-          <td class="journalCell journalDate">
+<!--          <td class="journalCell journalDate">
 
             <span
               editable-bsdate="journalEntry.date" 
@@ -274,7 +288,7 @@
 
           <td class="journalCell journalTime">
             <span
-              editable-text="journalEntry.time"
+              editable-bstime=="journalEntry.time"
               e-name="date" 
               e-form="rowform">
                 {{ journalEntry.time }}
@@ -302,7 +316,7 @@
           <td class="journalCell journalTools">
 
             <!-- Row edit form -->
-            <form class="form-buttons form-inline" 
+<!--            <form class="form-buttons form-inline" 
               editable-form 
               name="rowform" 
               onaftersave="editSaveRow($data)" 
@@ -321,7 +335,7 @@
             </form>
 
             <!-- Row view controls -->
-            <div class="buttons" ng-show="!rowform.$visible">
+<!--            <div class="buttons" ng-show="!rowform.$visible">
               <button class="btn btn-primary" 
                 ng-click="rowform.$show()">
                 <i class="glyphicon glyphicon-edit"></i> 
@@ -337,7 +351,7 @@
       </tbody>
 
     </table>
-
+-->
   </div> <!-- Section -->
 
 </div>
