@@ -6,31 +6,24 @@
 
     <form class="form-inline" role="form">
 
-      <div class="row">
-        <div class="col-md-12">
+      <h2>
+          <label for="goal">Goal: </label>
+          <input id="goal" class="form-control input-lg"style="text-align: center; width: 140px;" 
+            type="text" maxlength="4"
+            placeholder="How many?"
+            ng-model="goal"
+            ng-change="onGoalChange(goal)"
+            ng-model-onblur
+            ng-pattern="/^[0-9]{1,7}$/">
+          <label for="goal"> calories per day.</label>
 
-          <div class="form-group">
-            <h2>
-                <label for="goal">Goal: </label>
-                <input id="goal" class="form-control input-lg"style="text-align: center; width: 140px;" 
-                  type="text" maxlength="4"
-                  placeholder="How many?"
-                  ng-model="goal"
-                  ng-change="onGoalChange(goal)"
-                  ng-model-onblur
-                  ng-pattern="/^[0-9]{1,7}$/">
-                <label for="goal"> calories per day.</label>
-            </h2>
-          </div>
+          <span class="label"
+            ng-class="'label-{{alert.type}}'"
+            ng-repeat="alert in alerts.goal">
+            {{alert.msg}}
+          </span>
 
-          <div class="alert-container">
-            <alert class="alert alert-inline"
-              ng-repeat="alert in alerts.goal" type="{{alert.type}}" close="closeAlert('goal', $index)">
-              {{alert.msg}}
-            </alert>
-          </div>
-
-        </div>
+      </h2>
 
     </form>
   </div>
@@ -42,15 +35,13 @@
     <form id="addForm" class="form-inline" role="form"
       ng-submit="addSaveRow()">
 
-      <div>
-        <alert class="alert-sm"
-          ng-repeat="alert in alerts.add" type="{{alert.type}}" close="closeAlert('add', $index)">
-          {{alert.msg}}
-        </alert>
-      </div>
-
       <h2 style="font-weight:bold;">
-        Add Journal Entry: 
+        Add Journal Entry:
+        <span class="label"
+          ng-class="'label-{{alert.type}}'"
+          ng-repeat="alert in alerts.add">
+          {{alert.msg}}
+        </span>
       </h2>
       
       <table class="journalEntries" style="width: 100%;">
@@ -134,11 +125,21 @@
         <span>Dates: {{filter.dates.from}} -> {{filter.dates.to}}</span>
         <a><i class="remove glyphicon glyphicon-remove glyphicon-white"></i></a> 
       </span>
-
       <span class="tag label label-info" ng-show="filter.times.active">
         <span>Times: {{filter.times.from}} -> {{filter.times.to}}</span>
         <a><i class="remove glyphicon glyphicon-remove glyphicon-white"></i></a> 
       </span>
+      <span class="label"
+        ng-class="'label-{{alert.type}}'"
+        ng-repeat="alert in alerts.filter">
+        {{alert.msg}}
+      </span>
+      <span class="label"
+        ng-class="'label-{{alert.type}}'"
+        ng-repeat="alert in alerts.edit">
+        {{alert.msg}}
+      </span>
+
     </h2> <!-- title and filter tags -->
 
 
@@ -202,22 +203,6 @@
 
     <!-- Journal Table -->
 
-    <div>
-      <alert class="alert-sm"
-        ng-repeat="alert in alerts.edit" type="{{alert.type}}" close="closeAlert('edit', $index)">
-        {{alert.msg}}
-      </alert>
-    </div>
-
-<!--
-    <p ng-repeat="entry in journalEntries">
-    {{ entry }} </pre>
-    </p>
-    <hr/>
-    <p ng-repeat="ent in journalEntriesGrouped">
-    {{ ent }} </pre>
-    </p>
--->
     <table class="journalEntries" style="width: 100%;">
       <thead>
         <tr class="journalRow journalHeader">
@@ -261,7 +246,7 @@
 
           <!-- Make the Date and Calories badge -->
           <td class="journalCell journalDate" style="position: relative;"
-            ng-show="journalDay.spriteShow && journalDay.spriteVisible">
+            ng-show="journalDay.spriteShow && journalDay.formsOpen==0">
 
             <span class="journalDateSprite" ng-class="journalDay.color" style="position: absolute; top: 10px; left: 10px;"
             ng-if="$first">
@@ -273,12 +258,16 @@
 
           <!-- Make the item cells-->
           <td class="journalCell journalDate"
-            ng-hide="journalDay.spriteShow && journalDay.spriteVisible">
+            ng-hide="journalDay.spriteShow && journalDay.formsOpen==0">
 
             <span
-              editable-text="journalEntry.date" 
+              editable-bsdate="journalEntry.date" 
               e-name="date" 
-              e-form="rowform">
+              e-form="rowform"
+              onshow="openPicker()"
+              onhide="closePicker()"
+              e-is-open="picker.opened"
+              e-datepicker-popup="dd-MMMM-yyyy">
                 {{ journalEntry.date | date:'MMM d'}}
             </span>
           </td>
@@ -286,6 +275,8 @@
           <td class="journalCell journalTime">
             <span
               editable-text="journalEntry.date"
+              e-datepicker-popup="MMM d"
+              e-showmeridian="false"
               e-name="date" 
               e-form="rowform">
                 {{ journalEntry.date | date:'H:mm'}}
@@ -321,12 +312,13 @@
               shown="inserted == journalEntry">
   
               <button class="btn btn-primary" type="submit"
-                ng-disabled="rowform.$waiting">
+                ng-disabled="rowform.$waiting"
+                ng-click="journalDay.formsOpen=journalDay.formsOpen-1">
                 <i class="glyphicon glyphicon-ok"></i> 
               </button>
               <button class="btn btn-default" type="button" 
                 ng-disabled="rowform.$waiting" 
-                ng-click="rowform.$cancel()">
+                ng-click="rowform.$cancel(); journalDay.formsOpen=journalDay.formsOpen-1">
                 <i class="glyphicon glyphicon-remove"></i> 
               </button>
             </form>
@@ -334,7 +326,7 @@
             <!-- Row view controls -->
             <div class="buttons" ng-show="!rowform.$visible">
               <button class="btn btn-primary" 
-                ng-click="rowform.$show()">
+                ng-click="rowform.$show(); journalDay.formsOpen=journalDay.formsOpen+1">
                 <i class="glyphicon glyphicon-edit"></i> 
               </button>
               <button class="btn btn-danger" 

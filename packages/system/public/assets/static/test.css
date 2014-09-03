@@ -60,11 +60,13 @@ timepicker-pop .dropdown-menu {
   width: auto;
 }
 
+.journalDate, 
+.journalDate input,
 .journalTime, 
 .journalTime input,
 .journalCalories, 
 .journalCalories input {
-  text-align: right;
+  text-align: center;
 }
 
 .journalTools {

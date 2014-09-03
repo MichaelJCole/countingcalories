@@ -10,7 +10,7 @@ angular.module('mean.dashboard')
   function($scope, $http, Global) {
 
     // Constants and globals
-    $scope.ALERT_TIMEOUT = 3000;
+    $scope.ALERT_TIMEOUT = 3*1000;
     $scope.MIN_SPRITE_ENTRIES = 3;
     $scope.global = Global;
     $scope.package = {
@@ -71,18 +71,14 @@ angular.module('mean.dashboard')
     // Alerts
     $scope.addAlert = function(alertGroup, message, type) {
       // Add the alert to the group
-      var alert = {msg: message, type: type, close: true};
+      var alert = {msg: message, type: type};
       $scope.alerts[alertGroup].push(alert);
 
       // Set a timeout to close the oldest one
       _.delay(function() {
-        $scope.closeAlert(alertGroup, 0);
+        $scope.alerts[alertGroup].splice(0, 1); // remove the oldest alert at from of array.
         $scope.$apply();
       },$scope.ALERT_TIMEOUT);
-    };
-
-    $scope.closeAlert = function(alertGroup, index) {
-      $scope.alerts[alertGroup].splice(index, 1);
     };
 
 
@@ -145,11 +141,6 @@ angular.module('mean.dashboard')
     // Transform the linear array into a grouped array by days.    
     $scope.groupJournalEntries = function() {
       
-      // Add 'index' property so we can delete from original list when looking at grouped item.
-      _.forEach($scope.journalEntries, function(item, index) {
-        item.index = index;
-      });
-      
       // Group into days
       var temp = _.groupBy($scope.journalEntries, function(item) {
         return new Date(item.date.getFullYear(), item.date.getMonth(), item.date.getDate());
@@ -162,7 +153,7 @@ angular.module('mean.dashboard')
           date: new Date(key),
           entries: item,
           spriteShow: item.length >= $scope.MIN_SPRITE_ENTRIES,  // only show sprite if there is room
-          spriteVisible: true,
+          formsOpen: 0,
           color: ''
         });
       });
@@ -191,13 +182,13 @@ angular.module('mean.dashboard')
     };
 
     $scope.journalEntries = [
-      { date: new Date(), description: 'First', calories: '1001'},
-      { date: new Date(), description: 'Second', calories: '102'},
-      { date: new Date(), description: 'Third', calories: '1003'},
-      { date: new Date(), description: 'First', calories: '104'},
-      { date: new Date(), description: 'Second', calories: '1005'},
-      { date: new Date(), description: 'Third', calories: '106'},
-      { date: new Date(), description: 'First', calories: '1007'}
+      { _id: 11, date: new Date(), description: 'First', calories: '1001'},
+      { _id: 12, date: new Date(), description: 'Second', calories: '102'},
+      { _id: 13, date: new Date(), description: 'Third', calories: '1003'},
+      { _id: 14, date: new Date(), description: 'First', calories: '104'},
+      { _id: 15, date: new Date(), description: 'Second', calories: '1005'},
+      { _id: 16, date: new Date('2012-09-02 12:00'), description: 'Third', calories: '106'},
+      { _id: 17, date: new Date('2012-09-02 12:00'), description: 'First', calories: '1007'}
     ];
 
     $scope.groupJournalEntries();
