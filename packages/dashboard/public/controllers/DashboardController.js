@@ -131,6 +131,7 @@ angular.module('mean.dashboard')
     // delete button on inline edit
     $scope.editDeleteRow = function($index) {
       $scope.journalEntries.splice($index, 1);
+      $scope.groupJournalEntries();
       $scope.addAlert('edit', 'Deleted', 'success');
     };
 
