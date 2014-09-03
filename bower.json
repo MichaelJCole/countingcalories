@@ -12,6 +12,7 @@
     "angular-bootstrap": "0.11.0",
     "angular-ui-router": "#master",
     "angular-xeditable": "~0.1.8",
-    "lodash": "~2.4.1"
+    "lodash": "~2.4.1",
+    "angular-ui-utils": "~0.1.1"
   }
 }

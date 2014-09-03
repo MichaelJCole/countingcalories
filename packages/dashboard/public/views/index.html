@@ -14,7 +14,7 @@
             ng-model="goal"
             ng-change="onGoalChange(goal)"
             ng-model-onblur
-            ng-pattern="/^[0-9]{1,7}$/">
+            ng-numbers-only>
           <label for="goal"> calories per day.</label>
 
           <span class="label"
@@ -96,7 +96,7 @@
                   ng-model="journalEntry.calories"
                   ng-required="true"
                   ng-model-onblur
-                  ng-pattern="/^[0-9]{1,7}$/">
+                  ng-numbers-only>
               </div>
             </td>
 
@@ -261,23 +261,19 @@
             ng-hide="journalDay.spriteShow && journalDay.formsOpen==0">
 
             <span
-              editable-bsdate="journalEntry.date" 
-              e-name="date" 
-              e-form="rowform"
-              onshow="openPicker()"
-              onhide="closePicker()"
-              e-is-open="picker.opened"
-              e-datepicker-popup="dd-MMMM-yyyy">
+              editable-text="journalEntry.dateText" 
+              e-name="date"
+              e-ui-mask="9999/99/99"
+              e-form="rowform">
                 {{ journalEntry.date | date:'MMM d'}}
             </span>
           </td>
 
           <td class="journalCell journalTime">
             <span
-              editable-text="journalEntry.date"
-              e-datepicker-popup="MMM d"
-              e-showmeridian="false"
-              e-name="date" 
+              editable-text="journalEntry.timeText"
+              e-name="time" 
+              e-ui-mask="99:99"
               e-form="rowform">
                 {{ journalEntry.date | date:'H:mm'}}
             </span>
@@ -307,7 +303,7 @@
             <form class="form-buttons form-inline" 
               editable-form 
               name="rowform" 
-              onaftersave="editSaveRow($data)" 
+              onbeforesave="editSaveRow($data)" 
               ng-show="rowform.$visible" 
               shown="inserted == journalEntry">
   

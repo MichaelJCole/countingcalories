@@ -6,8 +6,8 @@ angular.module('mean.dashboard')
   editableOptions.theme = 'bs3'; // bootstrap3 theme. Can be also 'bs2', 'default'
 })
 
-.controller('DashboardController', ['$scope', '$http', 'Global',
-  function($scope, $http, Global) {
+.controller('DashboardController', ['$scope', '$http', '$filter', 'Global',
+  function($scope, $http, $filter, Global) {
 
     // Constants and globals
     $scope.ALERT_TIMEOUT = 3*1000;
@@ -163,6 +163,10 @@ angular.module('mean.dashboard')
 
         // Calculate total for that day
         var total = _.reduce(item.entries, function(sum, item) {
+          // ALSO split time
+          item.dateText = $filter('date')(item.date, "yyyy/MM/dd");
+          item.timeText = $filter('date')(item.date, "HH:mm");
+          // calculate the total calories.
           return sum + (+item.calories);
         },0);
         item.total = total;
