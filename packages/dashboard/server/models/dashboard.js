@@ -83,8 +83,8 @@ JournalSchema.path('description').validate(function(description) {
   return !!description;
 }, 'Description cannot be blank');
 JournalSchema.path('calories').validate(function(calories) {
-  // Cannot be <0
-  return calories < 0;
+  // Must be > 0
+  return calories > 0;
 }, 'Calories cannot be negative');
 
 /**

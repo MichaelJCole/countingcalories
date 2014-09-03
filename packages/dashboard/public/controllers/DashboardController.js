@@ -6,8 +6,8 @@ angular.module('mean.dashboard')
   editableOptions.theme = 'bs3'; // bootstrap3 theme. Can be also 'bs2', 'default'
 })
 
-.controller('DashboardController', ['$scope', '$http', '$filter', 'Global',
-  function($scope, $http, $filter, Global) {
+.controller('DashboardController', ['$scope', '$http', '$filter', 'Global', 'JournalEntry',
+  function($scope, $http, $filter, Global, JournalEntry) {
 
     // Constants and globals
     $scope.ALERT_TIMEOUT = 3*1000;
@@ -82,7 +82,7 @@ angular.module('mean.dashboard')
     };
 
 
-    // Data Events
+    // Data Events - Goal
     
     // Load goal from API
     $http.get('dashboard/api/1.0/goal')
@@ -107,9 +107,21 @@ angular.module('mean.dashboard')
     };
 
 
+    // Data Events - Journal Entries
+
+    $scope.journalEntries = [];
+    JournalEntry.query(function(response) {
+      $scope.journalEntries = response;
+      // Transform them into a nested structure for UI
+      $scope.groupJournalEntries();
+    });
 
     // ng-submit for the add form
     $scope.addSaveRow = function() {
+      JournalEntry.save($scope.journalEntry)
+        .$promise.then(function(response) {
+          console.log(response);
+        });
       // FIXME: put this code in a http callback
       $scope.journalEntries.push($scope.journalEntry);
       $scope.groupJournalEntries();
@@ -117,23 +129,25 @@ angular.module('mean.dashboard')
       $scope.addAlert('add', 'Added', 'success');
     };
 
-
-
     // onaftersave for the edit forms
     $scope.editSaveRow = function($data) {
       // FIXME: put this code in a http callback
       // is model automatically updated?
+      $scope.addAlert('edit', 'Saved', 'success');
+      $scope.groupJournalEntries();
       console.log('editSaveRow');
       console.log($data);
-      $scope.addAlert('edit', 'Saved', 'success');
     };
 
     // delete button on inline edit
     $scope.editDeleteRow = function($index) {
+      // FIXME: put this code in a http callback
+      // is model automatically updated?
+      $scope.addAlert('edit', 'Deleted', 'success');
       $scope.journalEntries.splice($index, 1);
       $scope.groupJournalEntries();
-      $scope.addAlert('edit', 'Deleted', 'success');
     };
+
 
     // filters look into angular filter on the collection.  Not the constant!  Use filter called 'filter'
     // https://docs.angularjs.org/api/ng/filter/filter
@@ -144,7 +158,8 @@ angular.module('mean.dashboard')
       
       // Group into days
       var temp = _.groupBy($scope.journalEntries, function(item) {
-        return new Date(item.date.getFullYear(), item.date.getMonth(), item.date.getDate());
+        var date = new Date(item.date);
+        return new Date(date.getFullYear(), date.getMonth(), date.getDate());
       });
 
       // Transform grouped array into nested objects
@@ -165,8 +180,8 @@ angular.module('mean.dashboard')
         // Calculate total for that day
         var total = _.reduce(item.entries, function(sum, item) {
           // ALSO split time
-          item.dateText = $filter('date')(item.date, "yyyy/MM/dd");
-          item.timeText = $filter('date')(item.date, "HH:mm");
+          item.dateText = $filter('date')(item.date, 'yyyy/MM/dd');
+          item.timeText = $filter('date')(item.date, 'HH:mm');
           // calculate the total calories.
           return sum + (+item.calories);
         },0);
@@ -185,18 +200,5 @@ angular.module('mean.dashboard')
       });
 
     };
-
-    $scope.journalEntries = [
-      { _id: 11, date: new Date(), description: 'First', calories: '1001'},
-      { _id: 12, date: new Date(), description: 'Second', calories: '102'},
-      { _id: 13, date: new Date(), description: 'Third', calories: '1003'},
-      { _id: 14, date: new Date(), description: 'First', calories: '104'},
-      { _id: 15, date: new Date(), description: 'Second', calories: '1005'},
-      { _id: 16, date: new Date('2012-09-02 12:00'), description: 'Third', calories: '106'},
-      { _id: 17, date: new Date('2012-09-02 12:00'), description: 'First', calories: '1007'}
-    ];
-
-    $scope.groupJournalEntries();
-
   }
 ]);

@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
-  //Journal = mongoose.model('Journal'),
+  Journal = mongoose.model('Journal'),
   Goal = mongoose.model('Goal'),
   _ = require('lodash');  // jshint ignore:line
 
@@ -44,9 +44,40 @@ exports.goalGet = function(req, res) {
   );
 };
 
+/**
+ * Get the user's list of journal entries
+ */
+exports.journalEntryList = function(req, res) {
+  Journal.find().sort('-date').exec(function(err, journal) {
+    if (err) {
+      return res.json(500, {
+        error: 'Cannot list the journalEntries'
+      });
+    }
+    res.json(journal);
+
+  });
+};
+
+/**
+ * Get the user's list of journal entries
+ */
+exports.journalEntryCreate = function(req, res) {
+  var journal = new Journal(req.body);
+  journal.user = req.user;
+
+  journal.save(function(err) {
+    if (err) {
+      return res.status(500).json({
+        error: 'Cannot save the journalEntry',
+        err: err
+      });
+    }
+    res.json(journal);
+  });
+};
+
 /*
-exports.journalList
-exports.journalCreate
 exports.journalRead
 exports.journalUpdate
 exports.journalDelete
