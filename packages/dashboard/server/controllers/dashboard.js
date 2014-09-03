@@ -6,7 +6,7 @@
 var mongoose = require('mongoose'),
   //Journal = mongoose.model('Journal'),
   Goal = mongoose.model('Goal'),
-  _ = require('lodash');
+  _ = require('lodash');  // jshint ignore:line
 
 
 /**

@@ -2,13 +2,16 @@
 
 angular.module('mean.dashboard')
 
+.run(function(editableOptions) {
+  editableOptions.theme = 'bs3'; // bootstrap3 theme. Can be also 'bs2', 'default'
+})
+
 .controller('DashboardController', ['$scope', '$http', 'Global',
   function($scope, $http, Global) {
 
-
     // Constants and globals
     $scope.ALERT_TIMEOUT = 3000;
-
+    $scope.MIN_SPRITE_ENTRIES = 3;
     $scope.global = Global;
     $scope.package = {
       name: 'dashboard'
@@ -26,10 +29,10 @@ angular.module('mean.dashboard')
     $scope.alerts={ goal:[], add:[], filter:[], edit:[] };
 
     // Model
-    $scope.goal;  // loaded in Data Events below
+    // $scope.goal;  // loaded in Data Events below
     $scope.journalEntries = []; // loaded in Data Events below
     $scope.journalEntriesGrouped = [];
-    $scope.journalEntry = { date: new Date(), description: "", calories: ""};
+    $scope.journalEntry = { date: new Date(), description: '', calories: ''};
 
     $scope.filter = {
       date: {
@@ -89,6 +92,7 @@ angular.module('mean.dashboard')
     $http.get('dashboard/api/1.0/goal')
       .success(function(data, status, headers, config) {
         $scope.goal = data.goal;
+        $scope.groupJournalEntries(); // readjust colors
       })
       .error(function(data, status, headers, config) {
         $scope.addAlert('goal', 'Server error', 'danger');
@@ -99,6 +103,7 @@ angular.module('mean.dashboard')
       $http.post('dashboard/api/1.0/goal', angular.toJson({goal: goal}))
         .success(function() {
           $scope.addAlert('goal', 'Yes!', 'success');
+          $scope.groupJournalEntries(); // readjust colors
         })
         .error(function() {
           $scope.addAlert('goal', 'Server error', 'danger');
@@ -112,9 +117,8 @@ angular.module('mean.dashboard')
       // FIXME: put this code in a http callback
       $scope.journalEntries.push($scope.journalEntry);
       $scope.groupJournalEntries();
-      $scope.journalEntry = { date: new Date(), description: "", calories: ""};
+      $scope.journalEntry = { date: new Date(), description: '', calories: ''};
       $scope.addAlert('add', 'Added', 'success');
-      //console.log($scope.journalEntries);
     };
 
 
@@ -137,22 +141,63 @@ angular.module('mean.dashboard')
     // filters look into angular filter on the collection.  Not the constant!  Use filter called 'filter'
     // https://docs.angularjs.org/api/ng/filter/filter
 
-    // Mockup data
-    
+ 
+    // Transform the linear array into a grouped array by days.    
     $scope.groupJournalEntries = function() {
-      $scope.journalEntriesGrouped = _.groupBy($scope.journalEntries, function(item) {
+      
+      // Add 'index' property so we can delete from original list when looking at grouped item.
+      _.forEach($scope.journalEntries, function(item, index) {
+        item.index = index;
+      });
+      
+      // Group into days
+      var temp = _.groupBy($scope.journalEntries, function(item) {
         return new Date(item.date.getFullYear(), item.date.getMonth(), item.date.getDate());
       });
+
+      // Transform grouped array into nested objects
+      $scope.journalEntriesGrouped = [];
+      _.forEach(temp, function(item, key) {
+        $scope.journalEntriesGrouped.push({
+          date: new Date(key),
+          entries: item,
+          spriteShow: item.length >= $scope.MIN_SPRITE_ENTRIES,  // only show sprite if there is room
+          spriteVisible: true,
+          color: ''
+        });
+      });
+
+      // Set display for each day red/green
+      _.each($scope.journalEntriesGrouped, function(item) {
+
+        // Calculate total for that day
+        var total = _.reduce(item.entries, function(sum, item) {
+          return sum + (+item.calories);
+        },0);
+        item.total = total;
+
+        // Set .color appropriately
+        if ($scope.goal) {
+          if (total > $scope.goal) {
+            item.color = 'red';
+          } else {
+            item.color = 'green';
+          }
+        } else {
+          item.color = '';
+        }
+      });
+
     };
 
     $scope.journalEntries = [
-      { date: new Date(), description: "First", calories: "1000"},
-      { date: new Date(), description: "Second", calories: "100"},
-      { date: new Date(), description: "Third", calories: "1000"},
-      { date: new Date(), description: "First", calories: "100"},
-      { date: new Date(), description: "Second", calories: "1000"},
-      { date: new Date(), description: "Third", calories: "100"},
-      { date: new Date(), description: "First", calories: "1000"}
+      { date: new Date(), description: 'First', calories: '1001'},
+      { date: new Date(), description: 'Second', calories: '102'},
+      { date: new Date(), description: 'Third', calories: '1003'},
+      { date: new Date(), description: 'First', calories: '104'},
+      { date: new Date(), description: 'Second', calories: '1005'},
+      { date: new Date(), description: 'Third', calories: '106'},
+      { date: new Date(), description: 'First', calories: '1007'}
     ];
 
     $scope.groupJournalEntries();

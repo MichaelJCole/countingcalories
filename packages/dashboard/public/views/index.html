@@ -12,7 +12,7 @@
           <div class="form-group">
             <h2>
                 <label for="goal">Goal: </label>
-                <input id="goal" class="form-control input-lg"style="width: 140px;" 
+                <input id="goal" class="form-control input-lg"style="text-align: center; width: 140px;" 
                   type="text" maxlength="4"
                   placeholder="How many?"
                   ng-model="goal"
@@ -64,7 +64,7 @@
                 <input type="text" class="form-control input" 
                   ng-model="journalEntry.date" 
                   ng-required="true"
-                  datepicker-popup="{{format}}" 
+                  datepicker-popup="MMM d" 
                   is-open="datePickerOpen" 
                   max-date="today"
                   show-weeks="false" 
@@ -209,6 +209,7 @@
       </alert>
     </div>
 
+<!--
     <p ng-repeat="entry in journalEntries">
     {{ entry }} </pre>
     </p>
@@ -216,9 +217,7 @@
     <p ng-repeat="ent in journalEntriesGrouped">
     {{ ent }} </pre>
     </p>
-
-    <!--
-
+-->
     <table class="journalEntries" style="width: 100%;">
       <thead>
         <tr class="journalRow journalHeader">
@@ -254,44 +253,42 @@
         </tr>
 
       </thead> <!-- journalHeader -->
-<!--
-      <tbody class="journalDateRow" ng-class="date.display" 
-        ng-repeat="journalDay in journalEntries">
+      <tbody class="journalDateRow" ng-class="journalDay.color" 
+        ng-repeat="journalDay in journalEntriesGrouped">
 
         <tr class="journalItem" 
-          ng-repeat="journalEntry in journalDay">
+          ng-repeat="journalEntry in journalDay.entries">
 
           <!-- Make the Date and Calories badge -->
-          <!--
           <td class="journalCell journalDate" style="position: relative;"
-            ng-show="date.showDateSprite">
+            ng-show="journalDay.spriteShow && journalDay.spriteVisible">
 
-            <span class="journalDateSprite" ng-class="date.display" style="position: absolute; top: 10px; left: 10px;"
+            <span class="journalDateSprite" ng-class="journalDay.color" style="position: absolute; top: 10px; left: 10px;"
             ng-if="$first">
-              <div class="spriteDate">{{date.date}}</div>
-              <div class="spriteCount">{{date.calories}}</div>
+              <div class="spriteDate">{{journalDay.date | date:'MMM d'}}</div>
+              <div class="spriteCount">{{journalDay.total}}</div>
               <div class="spriteLabel">calories</div>
             </span>
-          </td> -->
+          </td>
 
           <!-- Make the item cells-->
-<!--          <td class="journalCell journalDate">
+          <td class="journalCell journalDate"
+            ng-hide="journalDay.spriteShow && journalDay.spriteVisible">
 
             <span
-              editable-bsdate="journalEntry.date" 
-              e-datepicker-popup="yyyy-MM-dd"
+              editable-text="journalEntry.date" 
               e-name="date" 
               e-form="rowform">
-                {{ journalEntry.date }}
+                {{ journalEntry.date | date:'MMM d'}}
             </span>
           </td>
 
           <td class="journalCell journalTime">
             <span
-              editable-bstime=="journalEntry.time"
+              editable-text="journalEntry.date"
               e-name="date" 
               e-form="rowform">
-                {{ journalEntry.time }}
+                {{ journalEntry.date | date:'H:mm'}}
             </span>
           </td>
 
@@ -316,12 +313,12 @@
           <td class="journalCell journalTools">
 
             <!-- Row edit form -->
-<!--            <form class="form-buttons form-inline" 
+            <form class="form-buttons form-inline" 
               editable-form 
               name="rowform" 
               onaftersave="editSaveRow($data)" 
               ng-show="rowform.$visible" 
-              shown="inserted == item">
+              shown="inserted == journalEntry">
   
               <button class="btn btn-primary" type="submit"
                 ng-disabled="rowform.$waiting">
@@ -335,7 +332,7 @@
             </form>
 
             <!-- Row view controls -->
-<!--            <div class="buttons" ng-show="!rowform.$visible">
+            <div class="buttons" ng-show="!rowform.$visible">
               <button class="btn btn-primary" 
                 ng-click="rowform.$show()">
                 <i class="glyphicon glyphicon-edit"></i> 
@@ -351,7 +348,6 @@
       </tbody>
 
     </table>
--->
   </div> <!-- Section -->
 
 </div>

@@ -86,6 +86,7 @@
       "inject"      : false,
       "expect"      : false,
       "spyOn"       : false,
-      "$"           : false
+      "$"           : false,
+      "_"           : false
     }
 }
