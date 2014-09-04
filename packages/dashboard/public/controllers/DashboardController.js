@@ -118,8 +118,8 @@ angular.module('mean.dashboard')
     };
 
     // onaftersave for the edit forms
-    $scope.editSaveRow = function($data) {
-      JournalEntry.update($data).$promise.then(
+    $scope.editSaveRow = function(entry) {
+      JournalEntry.update({journalEntryId: entry._id}).$promise.then(
         function(response) {
           $scope.addAlert('edit', 'Saved', 'success');
           $scope.groupJournalEntries();
@@ -151,11 +151,16 @@ angular.module('mean.dashboard')
 
     // delete button on inline edit
     $scope.editDeleteRow = function(item) {
-      console.log(item._id);
-      JournalEntry.remove(item._id).$promise.then(
+      console.log(item);
+      JournalEntry.remove({journalEntryId: item._id}).$promise.then(
         function(response) {
           $scope.addAlert('edit', 'Deleted', 'success');
-          //TODO remove item from client list
+          // remove item from client list
+          _.remove($scope.journalEntries, 
+            function(testItem) { 
+              return item._id == testItem._id;
+            }
+          );
           $scope.groupJournalEntries();
         },
         function(err) {
@@ -232,8 +237,11 @@ angular.module('mean.dashboard')
     // Transform the linear array into a grouped array by days.    
     $scope.groupJournalEntries = function() {
       
+      // sort most recent first
+      var sorted = _.sortBy($scope.journalEntries, function(entry) { return -entry.date; });
+
       // Apply filters
-      var filtered = $filter('filter')($scope.journalEntries, $scope.filterDate);  // returns a function that is called with param
+      var filtered = $filter('filter')(sorted, $scope.filterDate);  // returns a function that is called with param
       filtered = $filter('filter')(filtered, $scope.filterTime);
 
       // Group into days
@@ -248,7 +256,7 @@ angular.module('mean.dashboard')
         $scope.journalEntriesGrouped.push({
           // Add these properties to the grouped date
           date: new Date(key),
-          entries: item,  // these are the individual entries
+          entries: item,  // these are the journalEntries
           spriteShow: item.length >= $scope.MIN_SPRITE_ENTRIES,  // only show sprite if there is room
           formsOpen: 0,
           color: ''
