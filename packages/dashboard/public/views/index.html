@@ -8,7 +8,7 @@
 
       <h2>
           <label for="goal">Goal: </label>
-          <input id="goal" class="form-control input-lg"style="text-align: center; width: 140px;" 
+          <input id="goal" class="form-control input-lg" style="text-align: center; width: 140px;" 
             type="text" maxlength="4"
             placeholder="How many?"
             ng-model="goal"
@@ -121,18 +121,18 @@
 
   <div class="dashboard-section">
     <h2 style="font-weight:bold;">Calorie Journal:
-      <span class="tag label label-info" ng-show="filter.dates.active">
-        <span>Dates: {{filter.dates.from}} -> {{filter.dates.to}}</span>
-        <a><i class="remove glyphicon glyphicon-remove glyphicon-white"></i></a> 
+      <span class="label label-info" ng-show="filter.date.active">
+        Dates: {{filter.date.from | date:'yyyy/MM/dd'}} -> {{filter.date.to | date:'yyyy/MM/dd'}}
+        <a href="" ng-click="filter.date.deactivate()">
+          <i class="remove glyphicon glyphicon-remove glyphicon-white"></i>
+        </a> 
       </span>
-      <span class="tag label label-info" ng-show="filter.times.active">
-        <span>Times: {{filter.times.from}} -> {{filter.times.to}}</span>
-        <a><i class="remove glyphicon glyphicon-remove glyphicon-white"></i></a> 
-      </span>
-      <span class="label"
-        ng-class="'label-{{alert.type}}'"
-        ng-repeat="alert in alerts.filter">
-        {{alert.msg}}
+      &nbsp;
+      <span class="label label-info" ng-show="filter.time.active">
+        Times: {{filter.time.from | date:'H:mm'}} -> {{filter.time.to | date:'H:mm'}}
+        <a href="" ng-click="filter.time.deactivate()">
+          <i class="remove glyphicon glyphicon-remove glyphicon-white"></i>
+        </a> 
       </span>
       <span class="label"
         ng-class="'label-{{alert.type}}'"
@@ -145,28 +145,32 @@
 
     <!-- Filter forms -->
 
-    <!-- Time filter form -->
+    <!-- Date filter form -->
     <form id="dateFilter" class="form-inline indent" 
-      ng-show="showDateFilter" role="form">
+      ng-show="filter.date.show" role="form">
 
       <h3>Date Filter</h3>
       <p>Show me only the entries between these two dates.</p>
       <div class="form-group">
         <!-- Starting and ending date controls -->
         <label class="sr-only" for="startDate">Start Date</label>
-        <input style="width: 140px;" type="text" class="form-control input-lg" id="startDate" placeholder="Starting?"
+        <input style="width: 140px;" type="text" class="form-control input-lg" id="startDate"
+          ui-mask="9999/99/99"
           ng-model="filter.date.from">
         -
         <label class="sr-only" for="endDate">End Date</label>
-        <input style="width: 140px;" type="text" class="form-control input-lg" id="endDate" placeholder="Ending?"
+        <input style="width: 140px;" type="text" class="form-control input-lg" id="endDate"
+          ui-mask="9999/99/99"
           ng-model="filter.date.to">
         <!-- Filter button -->
-        <button type="submit" class="btn btn-primary">
+        <button class="btn btn-primary"
+          ng-click="filter.date.activate()">
           <i class="glyphicon glyphicon-filter"></i> 
           <b>Filter</b>
         </button>
         <!-- Cancel button -->
-        <button type="submit" class="btn btn-default">
+        <button class="btn btn-default"
+          ng-click="filter.date.deactivate()">
           Cancel
         </button>
       </div>
@@ -174,7 +178,7 @@
 
     <!-- Time filter form -->
     <form id="timeFilter" class="form-inline indent" 
-      ng-show="showTimeFilter" role="form">
+      ng-show="filter.time.show" role="form">
 
       <h3>Time Filter</h3>
       <p>Show me only the entries, on all days, between these two times.</p>
@@ -188,13 +192,14 @@
         <input style="width: 140px;" type="text" class="form-control input-lg" id="endTime" placeholder="Ending?"
           ng-model=filter.time.to>
         <!-- Filter button -->
-        <button type="submit" class="btn btn-primary">
+        <button class="btn btn-primary"
+          ng-click="filter.time.activate()">
           <i class="glyphicon glyphicon-filter"></i> 
           <b>Filter</b>
         </button>
         <!-- Cancel button -->
-        <button  class="btn btn-default"
-          ng-click="showTimeFilter=false" type="submit">
+        <button class="btn btn-default"
+          ng-click="filter.time.deactivate()">
           Cancel
         </button>
       </div>
@@ -210,7 +215,7 @@
           <th class="journalCell journalDate">
             Date
             <button class="btn btn-sm btn-default" type="button"
-              ng-model="showDateFilter" btn-checkbox>
+              ng-model="filter.date.show" btn-checkbox>
               <i class="glyphicon glyphicon-filter"></i>
             </button>
           </th>
@@ -219,7 +224,7 @@
           <th class="journalCell journalTime">
             Time 
             <button class="btn btn-sm btn-default" type="button"
-              ng-model="showTimeFilter" btn-checkbox>
+              ng-model="filter.time.show" btn-checkbox>
               <i class="glyphicon glyphicon-filter"></i>
             </button>
           </th>
@@ -262,8 +267,9 @@
 
             <span
               editable-text="journalEntry.dateText" 
+              onbeforesave="editValidateDate($data)" 
               e-name="date"
-              e-ui-mask="9999/99/99"
+              xxxe-ui-mask="9999/99/99"
               e-form="rowform">
                 {{ journalEntry.date | date:'MMM d'}}
             </span>
@@ -272,8 +278,9 @@
           <td class="journalCell journalTime">
             <span
               editable-text="journalEntry.timeText"
+              onbeforesave="editValidateTime($data)" 
               e-name="time" 
-              e-ui-mask="99:99"
+              xxxe-ui-mask="99:99"
               e-form="rowform">
                 {{ journalEntry.date | date:'H:mm'}}
             </span>
@@ -291,6 +298,7 @@
           <td class="journalCell journalCalories">
             <span
               editable-text="journalEntry.calories"
+              onbeforesave="editValidateCalories($data)" 
               e-name="calories" 
               e-form="rowform">
                 {{ journalEntry.calories }}
@@ -309,7 +317,7 @@
   
               <button class="btn btn-primary" type="submit"
                 ng-disabled="rowform.$waiting"
-                ng-click="journalDay.formsOpen=journalDay.formsOpen-1">
+                ng-click="">
                 <i class="glyphicon glyphicon-ok"></i> 
               </button>
               <button class="btn btn-default" type="button" 

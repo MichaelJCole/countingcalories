@@ -87,6 +87,7 @@
       "expect"      : false,
       "spyOn"       : false,
       "$"           : false,
-      "_"           : false
+      "_"           : false,
+      "moment"      : false
     }
 }

@@ -21,8 +21,6 @@ angular.module('mean.dashboard')
     // Controller state
 
     // UI
-    $scope.showDateFilter = false;
-    $scope.showTimeFilter = false;
     $scope.timePickerOpen = false;
     $scope.datePickerOpen = false;
 
@@ -34,18 +32,6 @@ angular.module('mean.dashboard')
     $scope.journalEntriesGrouped = [];
     $scope.journalEntry = { date: new Date(), description: '', calories: ''};
 
-    $scope.filter = {
-      date: {
-        from: 'Jan 1',
-        to: 'Jan 4',
-        active: true
-      },
-      time: {
-        from: '12p',
-        to: '1p',
-        active: true
-      }
-    };
     // Methods
 
     // Date picker open
@@ -71,8 +57,7 @@ angular.module('mean.dashboard')
     // Alerts
     $scope.addAlert = function(alertGroup, message, type) {
       // Add the alert to the group
-      var alert = {msg: message, type: type};
-      $scope.alerts[alertGroup].push(alert);
+      $scope.alerts[alertGroup].push({msg: message, type: type});
 
       // Set a timeout to close the oldest one
       _.delay(function() {
@@ -139,6 +124,24 @@ angular.module('mean.dashboard')
       console.log($data);
     };
 
+
+    // Edit form validation
+
+    $scope.editValidateDate = function(value) {
+      if (value === '') return 'Cannot be empty';
+      var test = new Date(value);
+      if (isNaN(test.valueOf())) return 'Invalid date';  // Invalid dates are NaN
+    };
+    $scope.editValidateTime = function(value) {
+      if (value === '') return 'Cannot be empty';
+      var test = new Date('2014-01-01 ' + value);  // give date to test time.
+      if (isNaN(test.valueOf())) return 'Invalid time';  // Invalid dates are NaN
+    };
+    $scope.editValidateCalories = function(value) {
+      if (isNaN(value)) return 'Not a number';
+      if (value < 0) return 'Must be positive';
+    };
+
     // delete button on inline edit
     $scope.editDeleteRow = function($index) {
       // FIXME: put this code in a http callback
@@ -152,12 +155,76 @@ angular.module('mean.dashboard')
     // filters look into angular filter on the collection.  Not the constant!  Use filter called 'filter'
     // https://docs.angularjs.org/api/ng/filter/filter
 
+    $scope.filter = {
+      date: {
+        from: null,
+        to: null,
+        active: false,
+        show: false,
+        activate: function() {
+          $scope.filter.date.active = true;
+          $scope.filter.date.show = false;
+          $scope.groupJournalEntries();
+        },
+        deactivate: function() {
+          $scope.filter.date.active = false;
+          $scope.filter.date.show = false;
+          $scope.groupJournalEntries();
+        }
+      },
+      time: {
+        from: null,
+        to: null,
+        active: false,
+        show: false,
+        activate: function() {
+          $scope.filter.time.active = true;
+          $scope.filter.time.show = false;
+          $scope.groupJournalEntries();
+        },
+        deactivate: function() {
+          $scope.filter.time.active = false;
+          $scope.filter.time.show = false;
+          $scope.groupJournalEntries();
+        }
+      }
+    };
+
+    $scope.filterDate = function (value, index) {
+      if (!$scope.filter.date.active) {
+        return true;
+      }
+      // value.date from server is a json string
+      if (new Date(value.date) < new Date($scope.filter.date.from)) return false;
+      var temp = moment($scope.filter.date.to).add(1, 'days');
+      if (new Date(value.date) > temp) return false;
+      return true;
+    };
+
+    $scope.filterTime = function (value, index) {
+      if (!$scope.filter.time.active) {
+        return true;
+      }
+      // value.date from server is a json string
+      // test times alphabetically
+      var time = moment(value.date).format('HH:mm');
+      var from = moment('2014-01-01 ' + $scope.filter.time.from).format('HH:mm');
+      var to = moment('2014-01-01 ' + $scope.filter.time.to).format('HH:mm');
+
+      if (time < from) return false;
+      if (time > to) return false;
+      return true;
+    };
  
     // Transform the linear array into a grouped array by days.    
     $scope.groupJournalEntries = function() {
       
+      // Apply filters
+      var filtered = $filter('filter')($scope.journalEntries, $scope.filterDate);  // returns a function that is called with param
+      filtered = $filter('filter')(filtered, $scope.filterTime);
+
       // Group into days
-      var temp = _.groupBy($scope.journalEntries, function(item) {
+      var temp = _.groupBy(filtered, function(item) {
         var date = new Date(item.date);
         return new Date(date.getFullYear(), date.getMonth(), date.getDate());
       });
@@ -166,18 +233,19 @@ angular.module('mean.dashboard')
       $scope.journalEntriesGrouped = [];
       _.forEach(temp, function(item, key) {
         $scope.journalEntriesGrouped.push({
+          // Add these properties to the grouped date
           date: new Date(key),
-          entries: item,
+          entries: item,  // these are the individual entries
           spriteShow: item.length >= $scope.MIN_SPRITE_ENTRIES,  // only show sprite if there is room
           formsOpen: 0,
           color: ''
         });
       });
 
-      // Set display for each day red/green
+      // Set display for each day red/green on the grouped date
       _.each($scope.journalEntriesGrouped, function(item) {
 
-        // Calculate total for that day
+        // Calculate total for that grouped date
         var total = _.reduce(item.entries, function(sum, item) {
           // ALSO split time
           item.dateText = $filter('date')(item.date, 'yyyy/MM/dd');

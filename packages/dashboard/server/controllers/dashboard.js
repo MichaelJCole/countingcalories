@@ -77,8 +77,24 @@ exports.journalEntryCreate = function(req, res) {
   });
 };
 
+/**
+ * Delete a journal entries
+ */
+exports.journalEntryDelete = function(req, res) {
+  var _id = req.body._id;
+
+  var journal = Journal.find(/* where _id and user */);
+
+  journal.remove(function(err) {
+    if (err) {
+      return res.json(500, {
+        error: 'Cannot delete the journalEntry'
+      });
+    }
+    res.json(journal);
+  });
+};
 /*
-exports.journalRead
 exports.journalUpdate
 exports.journalDelete
 */
