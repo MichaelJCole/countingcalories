@@ -329,6 +329,12 @@
 
             <!-- Row view controls -->
             <div class="buttons" ng-show="!rowform.$visible">
+              <span
+                editable-text="journalEntry._id"
+                e-name="_id" 
+                e-form="rowform"
+                ng-show="false">
+              </span>
               <button class="btn btn-primary" 
                 ng-click="rowform.$show(); journalDay.formsOpen=journalDay.formsOpen+1">
                 <i class="glyphicon glyphicon-edit"></i> 

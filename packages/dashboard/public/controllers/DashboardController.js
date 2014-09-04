@@ -105,7 +105,7 @@ angular.module('mean.dashboard')
     $scope.addSaveRow = function() {
       JournalEntry.save($scope.journalEntry).$promise.then(
         function(response) {
-          $scope.journalEntries.push($scope.journalEntry);
+          $scope.journalEntries.push(response);  // push response so our list is same as server
           $scope.groupJournalEntries();
           $scope.journalEntry = { date: new Date(), description: '', calories: ''};  // reset the form for a new entry
           $scope.addAlert('add', 'Added', 'success');
@@ -117,15 +117,32 @@ angular.module('mean.dashboard')
       );
     };
 
+    // delete button on inline edit
+    $scope.editDeleteRow = function(item) {
+      JournalEntry.remove({journalEntryId: item._id}).$promise.then(
+        function(response) {
+          $scope.addAlert('edit', 'Deleted', 'success');
+          // remove item from client list
+          _.remove($scope.journalEntries, function(testItem) { return item._id == testItem._id; });
+          $scope.groupJournalEntries();
+        },
+        function(err) {
+          $scope.addAlert('edit', 'Error ' + err.statusText, 'danger');
+          console.log(err);
+        }
+      );
+    };
+
     // onaftersave for the edit forms
-    $scope.editSaveRow = function(entry) {
-      JournalEntry.update({journalEntryId: entry._id}).$promise.then(
+    $scope.editSaveRow = function(formData) {
+      console.log(formData);
+      JournalEntry.save({journalEntryId: formData._id}).$promise.then(
         function(response) {
           $scope.addAlert('edit', 'Saved', 'success');
           $scope.groupJournalEntries();
         },
         function(err) {
-          $scope.addAlert('add', 'Error ' + err.statusText, 'danger');
+          $scope.addAlert('edit', 'Error ' + err.statusText, 'danger');
           console.log(err);
         }
       );
@@ -149,26 +166,6 @@ angular.module('mean.dashboard')
       if (value < 0) return 'Must be positive';
     };
 
-    // delete button on inline edit
-    $scope.editDeleteRow = function(item) {
-      console.log(item);
-      JournalEntry.remove({journalEntryId: item._id}).$promise.then(
-        function(response) {
-          $scope.addAlert('edit', 'Deleted', 'success');
-          // remove item from client list
-          _.remove($scope.journalEntries, 
-            function(testItem) { 
-              return item._id == testItem._id;
-            }
-          );
-          $scope.groupJournalEntries();
-        },
-        function(err) {
-          $scope.addAlert('add', 'Error ' + err.statusText, 'danger');
-          console.log(err);
-        }
-      );
-    };
 
 
     // filters work on the original collection.  Not the grouped dates
@@ -238,7 +235,7 @@ angular.module('mean.dashboard')
     $scope.groupJournalEntries = function() {
       
       // sort most recent first
-      var sorted = _.sortBy($scope.journalEntries, function(entry) { return -entry.date; });
+      var sorted = _.sortBy($scope.journalEntries, function(entry) { var d = new Date(entry.date); return -d.getTime(); });
 
       // Apply filters
       var filtered = $filter('filter')(sorted, $scope.filterDate);  // returns a function that is called with param
