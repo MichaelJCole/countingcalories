@@ -35,12 +35,12 @@ GoalSchema.path('goal').validate(function(goal) {
 /**
  * Statics
  */
-GoalSchema.statics.load = function(id, cb) {
+/*GoalSchema.statics.load = function(id, cb) {
   this.findOne({
     _id: id
   }).populate('user', 'name username').exec(cb);
 };
-
+*/
 mongoose.model('Goal', GoalSchema);
 
 
@@ -89,11 +89,11 @@ JournalSchema.path('calories').validate(function(calories) {
 
 /**
  * Statics
- */
+ *//*
 JournalSchema.statics.load = function(id, cb) {
   this.findOne({
     _id: id
   }).populate('user', 'name username').exec(cb);
-};
+};*/
 
 mongoose.model('Journal', JournalSchema);

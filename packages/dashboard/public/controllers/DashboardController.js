@@ -103,25 +103,32 @@ angular.module('mean.dashboard')
 
     // ng-submit for the add form
     $scope.addSaveRow = function() {
-      JournalEntry.save($scope.journalEntry)
-        .$promise.then(function(response) {
-          console.log(response);
-        });
-      // FIXME: put this code in a http callback
-      $scope.journalEntries.push($scope.journalEntry);
-      $scope.groupJournalEntries();
-      $scope.journalEntry = { date: new Date(), description: '', calories: ''};
-      $scope.addAlert('add', 'Added', 'success');
+      JournalEntry.save($scope.journalEntry).$promise.then(
+        function(response) {
+          $scope.journalEntries.push($scope.journalEntry);
+          $scope.groupJournalEntries();
+          $scope.journalEntry = { date: new Date(), description: '', calories: ''};  // reset the form for a new entry
+          $scope.addAlert('add', 'Added', 'success');
+        },
+        function(err) {
+          $scope.addAlert('add', 'Error ' + err.statusText, 'danger');
+          console.log(err);
+        }
+      );
     };
 
     // onaftersave for the edit forms
     $scope.editSaveRow = function($data) {
-      // FIXME: put this code in a http callback
-      // is model automatically updated?
-      $scope.addAlert('edit', 'Saved', 'success');
-      $scope.groupJournalEntries();
-      console.log('editSaveRow');
-      console.log($data);
+      JournalEntry.update($data).$promise.then(
+        function(response) {
+          $scope.addAlert('edit', 'Saved', 'success');
+          $scope.groupJournalEntries();
+        },
+        function(err) {
+          $scope.addAlert('add', 'Error ' + err.statusText, 'danger');
+          console.log(err);
+        }
+      );
     };
 
 
@@ -143,18 +150,24 @@ angular.module('mean.dashboard')
     };
 
     // delete button on inline edit
-    $scope.editDeleteRow = function($index) {
-      // FIXME: put this code in a http callback
-      // is model automatically updated?
-      $scope.addAlert('edit', 'Deleted', 'success');
-      $scope.journalEntries.splice($index, 1);
-      $scope.groupJournalEntries();
+    $scope.editDeleteRow = function(item) {
+      console.log(item._id);
+      JournalEntry.remove(item._id).$promise.then(
+        function(response) {
+          $scope.addAlert('edit', 'Deleted', 'success');
+          //TODO remove item from client list
+          $scope.groupJournalEntries();
+        },
+        function(err) {
+          $scope.addAlert('add', 'Error ' + err.statusText, 'danger');
+          console.log(err);
+        }
+      );
     };
 
 
-    // filters look into angular filter on the collection.  Not the constant!  Use filter called 'filter'
-    // https://docs.angularjs.org/api/ng/filter/filter
-
+    // filters work on the original collection.  Not the grouped dates
+    
     $scope.filter = {
       date: {
         from: null,

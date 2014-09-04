@@ -12,13 +12,8 @@ module.exports = function(Journal, app, auth) {
   app.route('/dashboard/api/1.0/journalEntry')
     .post(auth.requiresLogin, dashboard.journalEntryCreate)
     .get(auth.requiresLogin, dashboard.journalEntryList);
-/*
-  app.route('/dashboard/api/1.0/journalEntry/:journalId')
-    .get(auth.requiresLogin, dashboard.journalRead)
-    .put(auth.requiresLogin, dashboard.journalUpdate)
-    .delete(auth.requiresLogin, dashboard.journalDelete);
 
-  // Finish with setting up the articleId param
-  app.param('journalId', dashboard.journalEntry);
-*/
+  app.route('/dashboard/api/1.0/journalEntry/:journalId')
+    .put(auth.requiresLogin, dashboard.journalEntryUpdate)
+    .delete(auth.requiresLogin, dashboard.journalEntryDelete);
 };

@@ -9,6 +9,8 @@ var mongoose = require('mongoose'),
   _ = require('lodash');  // jshint ignore:line
 
 
+// Goals
+
 /**
  * Find Goal by user.id
  */
@@ -27,7 +29,6 @@ exports.goalSet = function(req, res, next) {
   );
 };
 
-
 /**
  * Get the user's calorie goal
  */
@@ -44,19 +45,24 @@ exports.goalGet = function(req, res) {
   );
 };
 
+
+// Journal Entries
+
 /**
  * Get the user's list of journal entries
  */
 exports.journalEntryList = function(req, res) {
-  Journal.find().sort('-date').exec(function(err, journal) {
-    if (err) {
-      return res.json(500, {
-        error: 'Cannot list the journalEntries'
-      });
+  Journal.find({'user' : req.user._id })
+    .sort('-date')
+    .exec(function(err, journal) {
+      if (err) {
+        return res.json(500, {
+          error: 'Cannot list the journalEntries'
+        });
+      }
+      res.json(journal);
     }
-    res.json(journal);
-
-  });
+  );
 };
 
 /**
@@ -80,115 +86,36 @@ exports.journalEntryCreate = function(req, res) {
 /**
  * Delete a journal entries
  */
+exports.journalEntryUpdate = function(req, res) {
+  Journal.findOneAndUpdate( 
+    {_id: req.params.journalId, 'user' : req.user._id }, 
+    req.body, 
+    { upsert: true}, 
+    function(err, journal) {
+      if (err) {
+        return res.json(500, {
+          error: 'Cannot update the journalEntry'
+        });
+      }
+      res.json(journal);
+    }
+  );
+};
+
+
+/**
+ * Delete a journal entry
+ */
 exports.journalEntryDelete = function(req, res) {
-  var _id = req.body._id;
-
-  var journal = Journal.find(/* where _id and user */);
-
-  journal.remove(function(err) {
-    if (err) {
-      return res.json(500, {
-        error: 'Cannot delete the journalEntry'
-      });
+  Journal.findOneAndRemove(
+    {_id: req.params.journalId, 'user' : req.user._id }, 
+    function(err, journal) {
+      if (err) {
+        return res.json(500, {
+          error: 'Cannot delete the journalEntry'
+        });
+      }
+      res.json(journal);
     }
-    res.json(journal);
-  });
+  );
 };
-/*
-exports.journalUpdate
-exports.journalDelete
-*/
-/**
- * Find article by id
- */
-/*
-exports.article = function(req, res, next, id) {
-  Article.load(id, function(err, article) {
-    if (err) return next(err);
-    if (!article) return next(new Error('Failed to load article ' + id));
-    req.article = article;
-    next();
-  });
-};
-
-/**
- * Create an article
- */
-/*
-exports.create = function(req, res) {
-  var article = new Article(req.body);
-  article.user = req.user;
-
-  article.save(function(err) {
-    if (err) {
-      return res.json(500, {
-        error: 'Cannot save the article'
-      });
-    }
-    res.json(article);
-
-  });
-};
-
-/**
- * Update an article
- */
-/*
-exports.update = function(req, res) {
-  var article = req.article;
-
-  article = _.extend(article, req.body);
-
-  article.save(function(err) {
-    if (err) {
-      return res.json(500, {
-        error: 'Cannot update the article'
-      });
-    }
-    res.json(article);
-
-  });
-};
-
-/**
- * Delete an article
- */
-/*
-exports.destroy = function(req, res) {
-  var article = req.article;
-
-  article.remove(function(err) {
-    if (err) {
-      return res.json(500, {
-        error: 'Cannot delete the article'
-      });
-    }
-    res.json(article);
-
-  });
-};
-
-/**
- * Show an article
- */
-/*
-exports.show = function(req, res) {
-  res.json(req.article);
-};
-
-/**
- * List of Articles
- */
-/*
-exports.all = function(req, res) {
-  Article.find().sort('-created').populate('user', 'name username').exec(function(err, articles) {
-    if (err) {
-      return res.json(500, {
-        error: 'Cannot list the articles'
-      });
-    }
-    res.json(articles);
-
-  });
-};
-*/
