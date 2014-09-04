@@ -40,6 +40,7 @@ exports.goalGet = function(req, res) {
         console.log(err);
         return res.status(500).json({ error: err});       
       }
+      if (obj === null) obj = {goal: ''}; // if obj isn't set, then set to empty
       res.json({ goal: obj.goal });
     } 
   );
