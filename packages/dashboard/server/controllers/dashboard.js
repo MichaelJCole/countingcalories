@@ -87,13 +87,19 @@ exports.journalEntryCreate = function(req, res) {
  * Delete a journal entries
  */
 exports.journalEntryUpdate = function(req, res) {
+  var data = {
+    date: req.body.date,
+    description: req.body.description,
+    calories: req.body.calories
+  };
   Journal.findOneAndUpdate( 
     {_id: req.params.journalId, 'user' : req.user._id }, 
-    req.body, 
+    data, 
     { upsert: true}, 
     function(err, journal) {
       if (err) {
-        return res.json(500, {
+        console.log(err);
+        return res.status(500).json({
           error: 'Cannot update the journalEntry'
         });
       }

@@ -136,16 +136,14 @@ angular.module('mean.dashboard')
     // onaftersave for the edit forms
     $scope.editSaveRow = function(formData) {
       console.log(formData);
-      var resourceItem = _.find($scope.journalEntries, function(entry) { return entry._id == formData._id});
+      var resourceItem = _.find($scope.journalEntries, function(entry) { return entry._id == formData._id; });
       resourceItem.date = new Date( formData.date +' '+ formData.time);
       resourceItem.description = formData.description;
       resourceItem.calories = formData.calories;
-      console.log(resourceItem);
 
       resourceItem.$update(
         { journalEntryId: resourceItem._id },
         function(response, headers) {
-          console.log(headers);
           $scope.addAlert('edit', 'Saved', 'success');
           $scope.groupJournalEntries();
         },
