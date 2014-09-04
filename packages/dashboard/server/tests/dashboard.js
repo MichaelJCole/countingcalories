@@ -15,7 +15,7 @@ var Journal = mongoose.model('Journal');
  * Globals
  */
 var user;
-var serverURL = 'http://localhost:3000';
+var serverURL = 'http://localhost:3001';
 /**
  * Test Suites
  */
