@@ -126,7 +126,7 @@
         expect($rootScope.user.name).toBe('Fred');
         expect(scope.registerError).toEqual(0);
         expect($rootScope.$emit).toHaveBeenCalledWith('loggedin');
-        expect($location.url()).toBe('/');
+        expect($location.url()).toBe('/dashboard');
       });
 
 
