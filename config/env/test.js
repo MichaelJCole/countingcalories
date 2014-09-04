@@ -2,7 +2,9 @@
 
 module.exports = {
   db: 'mongodb://localhost/mean-test',
-  port: 3001,
+  http: {
+    port: process.env.PORT || 3001
+  },
   app: {
     name: 'Counting Calories - test'
   },

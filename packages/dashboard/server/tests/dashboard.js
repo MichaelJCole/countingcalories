@@ -15,30 +15,32 @@ var Journal = mongoose.model('Journal');
  * Globals
  */
 var user;
-var server = 'http://localhost:3000';
+var serverURL = 'http://localhost:3000';
 /**
  * Test Suites
  */
 describe('<Unit Test>', function() {
-
   describe('Dashboard API:', function() {
-
     beforeEach(function(done) {
+      // Add the user to the database through mongoDB
       user = new User({
         name: 'Full name',
-        email: 'test@test.com',
+        email: 'test99@test.com',
         username: 'user',
         password: 'password'
       });
 
       user.save(function() {
+        // After saved, we're done.
         done();
       });
     });
 
     afterEach(function(done) {
-      user.remove();
-      done();
+      // Remove the added user.
+      user.remove(function() {
+        done();
+      });
     });
 
     describe('Goal API:', function() {
@@ -46,7 +48,7 @@ describe('<Unit Test>', function() {
 
         // Login as user
         // - should return auth cookie
-        request(server)
+        request(serverURL)
         .post('/login')
         .send({email: user.email, password: user.password })
         // end handles the response
