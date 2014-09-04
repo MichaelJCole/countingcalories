@@ -57,7 +57,7 @@
         // test scope value
         expect($rootScope.user).toEqual('Fred');
         expect($rootScope.$emit).toHaveBeenCalledWith('loggedin');
-        expect($location.url()).toEqual('/');
+        expect($location.url()).toEqual('/dashboard'); // Changed this so after login user goes to new URL
       });
 
 
